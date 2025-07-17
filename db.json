@@ -1,0 +1,30 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Gậy bi-a cao cấp",
+      "price": 1500000,
+      "image": "https://picsum.photos/id/100/100/100"
+    },
+    {
+      "id": 2,
+      "name": "Gậy bi-a chuyên nghiệp",
+      "price": 2200000,
+      "image": "https://picsum.photos/id/101/100/100"
+    },
+    {
+      "id": 3,
+      "name": "Gậy tập luyện",
+      "price": 800000,
+      "image": "https://picsum.photos/id/102/100/100"
+    },
+    {
+      "name": "okokoko",
+      "price": 123,
+      "id": 4
+    }
+  ],
+  "brands": [],
+  "categories": [],
+  "users": []
+}

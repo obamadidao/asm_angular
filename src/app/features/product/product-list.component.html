@@ -1,0 +1,25 @@
+<h2>Danh sách sản phẩm</h2>
+<button (click)="goToAdd()"> Thêm sản phẩm</button>
+
+<table border="1" cellpadding="8">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Tên</th>
+      <th>Giá</th>
+      <th>Hành động</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of products">
+      <td>{{ product.id }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.price | number:'1.0-0' }}₫</td>
+      <td>
+<button (click)="goToEdit(product.id!)"> Sửa</button>
+<button (click)="deleteProduct(product.id!)"> Xoá</button>
+
+      </td>
+    </tr>
+  </tbody>
+</table>

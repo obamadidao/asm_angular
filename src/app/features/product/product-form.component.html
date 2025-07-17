@@ -1,0 +1,23 @@
+<h2>{{ isEdit ? 'Cập nhật sản phẩm' : 'Thêm sản phẩm' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div>
+    <label>Tên sản phẩm</label>
+    <input formControlName="name" />
+    <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+      Tên không được để trống
+    </div>
+  </div>
+
+  <div>
+    <label>Giá sản phẩm</label>
+    <input type="number" formControlName="price" />
+    <div *ngIf="form.get('price')?.invalid && form.get('price')?.touched">
+      Giá không hợp lệ
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="form.invalid">
+    {{ isEdit ? 'Lưu thay đổi' : 'Thêm mới' }}
+  </button>
+</form>
