@@ -1,23 +1,48 @@
-<h2>{{ isEdit ? 'Cập nhật sản phẩm' : 'Thêm sản phẩm' }}</h2>
+<div class="container">
+  <h2>{{ isEdit ? 'Cập nhật sản phẩm' : 'Thêm sản phẩm' }}</h2>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div>
-    <label>Tên sản phẩm</label>
-    <input formControlName="name" />
-    <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
-      Tên không được để trống
-    </div>
-  </div>
 
-  <div>
-    <label>Giá sản phẩm</label>
-    <input type="number" formControlName="price" />
-    <div *ngIf="form.get('price')?.invalid && form.get('price')?.touched">
-      Giá không hợp lệ
-    </div>
-  </div>
-
-  <button type="submit" [disabled]="form.invalid">
-    {{ isEdit ? 'Lưu thay đổi' : 'Thêm mới' }}
+<a routerLink="/products">
+  <button type="button" class="add-button">
+   Quay lại danh sách
   </button>
-</form>
+</a>
+
+  <div class="form-wrapper">
+    <div class="form-container">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="name">Tên sản phẩm</label>
+          <input id="name" formControlName="name" />
+          <div class="error" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+            Tên không được để trống
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="price">Giá sản phẩm</label>
+          <input id="price" type="number" formControlName="price" />
+          <div class="error" *ngIf="form.get('price')?.invalid && form.get('price')?.touched">
+            Giá không hợp lệ
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="image">Link hình ảnh</label>
+          <input id="image" type="text" formControlName="image" />
+          <div class="error" *ngIf="form.get('image')?.invalid && form.get('image')?.touched">
+            Link hình ảnh không hợp lệ
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="form.invalid">
+          {{ isEdit ? 'Lưu thay đổi' : 'Thêm mới' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+

@@ -4,13 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProductService } from './product.service';
 import { Product } from './product.model';
-
-
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-product-form',
   standalone: true,
   templateUrl: './product-form.component.html',
-  imports: [CommonModule, ReactiveFormsModule],
+  styleUrls: ['./product-form.component.css'],  
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
 })
 export class ProductFormComponent implements OnInit {
   form!: FormGroup;
@@ -23,9 +23,11 @@ export class ProductFormComponent implements OnInit {
   private productService = inject(ProductService);
 
   ngOnInit(): void {
+    // ✅ Thêm cả field 'image'
     this.form = this.fb.group({
       name: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
+      image: ['', Validators.required]
     });
 
     this.route.paramMap.subscribe(params => {

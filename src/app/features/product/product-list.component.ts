@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { DecimalPipe } from '@angular/common'; 
-
+import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { ProductService } from './product.service';
 import { Product } from './product.model';
@@ -10,8 +10,10 @@ import { Product } from './product.model';
   selector: 'app-product-list',
   standalone: true,
   templateUrl: './product-list.component.html',
-  imports: [CommonModule], 
+  styleUrls: ['./product-list.component.css'],
+  imports: [CommonModule, RouterModule]
 })
+
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
 
