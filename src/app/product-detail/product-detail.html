@@ -1,0 +1,12 @@
+<div class="product-card">
+  <p>Product Id: {{ productId }}</p>
+  <img [src]="product.image" [alt]="product.name" class="product-image" />
+  <h2>{{ product.name }}</h2>
+  <p>Giá: {{ product.price | currency : "USD" }}</p>
+  <p *ngIf="product.inStock; else outOfStock">
+    Trạng thái: <span class="in-stock">Còn hàng</span>
+  </p>
+  <ng-template #outOfStock>
+    <p>Trạng thái: <span class="out-of-stock">Hết hàng</span></p>
+  </ng-template>
+</div>

@@ -1,0 +1,36 @@
+<h2>Product List</h2>
+<input [(ngModel)]="filterText" placeholder="Filter by name" />
+<div *ngIf="filterProducts().length > 0; else noProducts">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of filterProducts()">
+        <td>
+          <!-- chen product.id trong url -->
+          <!-- /product/1/detail -->
+          <!-- lay dược :id từ url trong product detail -->
+          <!-- [routerLink] -->
+          <a [routerLink]="['/product', product.id, 'detail']">
+            {{ product.id }}
+          </a>
+        </td>
+        <!-- LAPTOP -->
+        <td>{{ product.name | uppercase }}</td>
+        <td>{{ product.price | currency : "VND" }}</td>
+        <td [ngStyle]="{ color: product.inStock ? 'green' : 'red' }">
+          {{ product.inStock ? "In Stock" : "Out of Stock" }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ng-template #noProducts>
+  <p>No products match the filter.</p>
+</ng-template>
