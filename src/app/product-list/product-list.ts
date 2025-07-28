@@ -1,26 +1,83 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { ProductService, Product, CategoryService, Category } from '../service';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, FormsModule, RouterLink],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './product-list.html',
-  styleUrl: './product-list.css',
+  styleUrls: ['./product-list.css'],
 })
-export class ProductList {
-  products = [
-    { id: 1, name: 'Laptop', price: 1000, inStock: true },
-    { id: 2, name: 'Phone', price: 500, inStock: false },
-    { id: 3, name: 'Tablet', price: 300, inStock: true },
-  ];
-
+export class ProductList implements OnInit {
+  products: Product[] = [];
+  categories: Category[] = [];
   filterText = '';
 
-  filterProducts() {
-    return this.products.filter((product) =>
-      product.name.toLowerCase().includes(this.filterText.toLowerCase())
+  constructor(
+    private productService: ProductService,
+    private categoryService: CategoryService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData(): void {
+    this.productService.getAllProducts().subscribe({
+      next: (data: Product[]) => {
+        this.products = data;
+      },
+      error: (err: any) => console.error('Error loading products', err),
+    });
+
+    this.categoryService.getAllCategories().subscribe({
+      next: (data: Category[]) => {
+        this.categories = data;
+      },
+      error: (err: any) => console.error('Error loading categories', err),
+    });
+  }
+
+  filterProducts(): Product[] {
+    const search = this.filterText.toLowerCase();
+    return this.products.filter(product =>
+      product.name.toLowerCase().includes(search) ||
+      (product.id !== undefined && product.id.toString().includes(search))
     );
+  }
+
+ getCategoryName(categoryId: any): string {
+  return (
+    this.categories.find(c => String(c.id) === String(categoryId))?.name || 'Unknown'
+  );
+}
+
+
+  editProduct(id: number): void {
+    this.router.navigate(['/products', id, 'edit']);
+  }
+
+  viewProduct(id: number): void {
+    this.router.navigate(['/products', id]);
+  }
+
+  deleteProduct(id: number): void {
+    if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')) {
+      this.productService.deleteProduct(id).subscribe({
+        next: () => {
+          alert('Xóa sản phẩm thành công!');
+          this.loadData();
+        },
+        error: (err: any) => {
+          console.error('Lỗi khi xóa sản phẩm:', err);
+          alert('Đã xảy ra lỗi khi xóa sản phẩm.');
+        },
+      });
+    }
   }
 }

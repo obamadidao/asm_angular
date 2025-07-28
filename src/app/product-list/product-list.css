@@ -1,16 +1,48 @@
+.search-input {
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  width: 300px;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 16px;
+  margin-top: 10px;
 }
-th,
-td {
+
+th, td {
+  padding: 8px 12px;
   border: 1px solid #ccc;
-  padding: 8px;
   text-align: left;
 }
-input {
-  padding: 8px;
-  margin-bottom: 16px;
-  width: 100%;
+
+.link {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.link:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+button {
+  margin-right: 5px;
+}
+button.edit-btn {
+  background-color: #f0ad4e; /* màu vàng */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button.delete-btn {
+  background-color: #d9534f; /* màu đỏ */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
 }

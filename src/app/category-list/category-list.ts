@@ -1,18 +1,27 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CategoryService, Category } from '../service';
 
 @Component({
   selector: 'app-category-list',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './category-list.html',
-  styleUrl: './category-list.css',
+  styleUrls: ['./category-list.css'],
 })
-export class CategoryList {
-  categories = [
-    { id: 1, name: 'Electronics' },
-    { id: 2, name: 'Books' },
-    { id: 3, name: 'Clothing' },
-    { id: 4, name: 'Home & Kitchen' },
-    { id: 5, name: 'Sports & Outdoors' },
-  ];
+export class CategoryList implements OnInit {
+  categories: Category[] = [];
+
+  constructor(private categoryService: CategoryService) {}
+
+  ngOnInit(): void {
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.categoryService.getAllCategories().subscribe({
+      next: (data) => (this.categories = data),
+      error: (err) => console.error('Lỗi tải danh mục:', err),
+    });
+  }
 }

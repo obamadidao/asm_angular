@@ -1,0 +1,14 @@
+/* Optional styling */
+form {
+  max-width: 600px;
+  margin: auto;
+}
+
+.is-invalid {
+  border-color: red;
+}
+
+.invalid-feedback {
+  color: red;
+  font-size: 0.875rem;
+}

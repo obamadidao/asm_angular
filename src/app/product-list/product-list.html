@@ -1,36 +1,46 @@
-<h2>Product List</h2>
-<input [(ngModel)]="filterText" placeholder="Filter by name" />
-<div *ngIf="filterProducts().length > 0; else noProducts">
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let product of filterProducts()">
-        <td>
-          <!-- chen product.id trong url -->
-          <!-- /product/1/detail -->
-          <!-- lay dược :id từ url trong product detail -->
-          <!-- [routerLink] -->
-          <a [routerLink]="['/product', product.id, 'detail']">
-            {{ product.id }}
-          </a>
-        </td>
-        <!-- LAPTOP -->
-        <td>{{ product.name | uppercase }}</td>
-        <td>{{ product.price | currency : "VND" }}</td>
-        <td [ngStyle]="{ color: product.inStock ? 'green' : 'red' }">
-          {{ product.inStock ? "In Stock" : "Out of Stock" }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<ng-template #noProducts>
-  <p>No products match the filter.</p>
-</ng-template>
+<h2>Danh sách sản phẩm</h2>
+
+<input
+  type="text"
+  [(ngModel)]="filterText"
+  placeholder="Tìm kiếm sản phẩm..."
+  class="search-input"
+/>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Ảnh</th>
+      <th>Tên sản phẩm</th>
+      <th>Giá</th>
+      <th>Danh mục</th>
+      <th>Thao tác</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of filterProducts()">
+      <td>{{ product.id }}</td>
+      <td>
+        <img
+          [src]="product.image"
+          alt="Ảnh sản phẩm"
+          width="40"
+          height="40"
+        />
+      </td>
+      <td>
+        <a *ngIf="product.id != null" [routerLink]="['/products', product.id, 'detail']" class="link">
+          {{ product.name }}
+        </a>
+      </td>
+      <td>{{ product.price | currency: 'VND':'symbol':'1.0-0' }}</td>
+      <td>{{ getCategoryName(product.categoryId) }}</td>
+<td>
+  <button *ngIf="product.id != null" (click)="editProduct(product.id)" class="edit-btn">Sửa</button>
+  <button *ngIf="product.id != null" (click)="deleteProduct(product.id)" class="delete-btn">Xoá</button>
+</td>
+    </tr>
+  </tbody>
+</table>
+

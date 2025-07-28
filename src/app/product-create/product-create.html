@@ -1,37 +1,66 @@
-<form #productForm="ngForm" (ngSubmit)="handleSubmit(productForm)">
+<h2>Create Product</h2>
+
+<form #form="ngForm" (ngSubmit)="handleSubmit(form)">
+  <!-- Product Name -->
   <div class="mb-3">
-    <label for="title" class="form-label">Product Title</label>
+    <label for="name" class="form-label">Product Name</label>
     <input
       type="text"
+      id="name"
+      name="name"
       class="form-control"
-      id="title"
-      name="title"
+      [(ngModel)]="product.name"
       required
-      [(ngModel)]="product.title"
-      [ngClass]="{ 'is-invalid': title.invalid && title.touched }"
-      #title="ngModel"
     />
-    <div *ngIf="title.invalid && title.touched" class="invalid-feedback">
-      <div *ngIf="title.errors?.['required']">Title is required.</div>
-    </div>
   </div>
 
+  <!-- Image Upload -->
   <div class="mb-3">
     <label for="image" class="form-label">Product Image</label>
     <input
-      type="text"
-      class="form-control"
+      type="file"
       id="image"
-      name="image"
-      [(ngModel)]="product.image"
+      class="form-control"
+      (change)="onImageSelected($event)"
+      required
+    />
+    <div *ngIf="product.image" class="mt-2">
+      <img
+        [src]="product.image"
+        alt="Preview"
+        class="img-thumbnail"
+        style="width: 150px; height: 150px; object-fit: cover;"
+      />
+    </div>
+  </div>
+
+  <!-- Price -->
+  <div class="mb-3">
+    <label for="price" class="form-label">Price</label>
+    <input
+      type="number"
+      id="price"
+      name="price"
+      class="form-control"
+      [(ngModel)]="product.price"
+      required
     />
   </div>
 
-  <button
-    type="submit"
-    class="btn btn-primary"
-    [disabled]="productForm.invalid"
-  >
-    Submit
-  </button>
+  <!-- Category -->
+  <div class="mb-3">
+    <label for="categoryId" class="form-label">Category</label>
+    <select
+      id="categoryId"
+      name="categoryId"
+      class="form-select"
+      [(ngModel)]="product.categoryId"
+      required
+    >
+      <option value="" disabled selected>-- Chọn danh mục --</option>
+      <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
 </form>

@@ -1,4 +1,35 @@
+.product-card {
+  max-width: 1000px;         /* Tăng chiều rộng card lên */
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 50px auto;        /* Căn giữa và khoảng cách trên dưới */
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1); /* Bóng nhẹ */
+  background-color: #fff;   /* Nền trắng */
+  transition: box-shadow 0.3s ease;
+  cursor: default;
+}
+
+.product-card:hover {
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
 .product-image {
-  max-width: 550px;
-  height: auto;
+  height: 350px;            /* Tăng chiều cao ảnh */
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  cursor: pointer;          /* nếu ảnh có thể click */
+}
+
+.product-image:hover {
+  transform: scale(1.05);
+}
+
+.no-image-placeholder {
+  height: 350px;            /* Đảm bảo placeholder cùng chiều cao với ảnh */
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+  font-style: italic;
 }

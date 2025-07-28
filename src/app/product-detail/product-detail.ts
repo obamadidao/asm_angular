@@ -1,33 +1,59 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ProductService, Product, CategoryService, Category } from '../service';
 
 @Component({
   selector: 'app-product-detail',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './product-detail.html',
-  styleUrl: './product-detail.css',
+  styleUrls: ['./product-detail.css'],
 })
-export class ProductDetail {
-  product = {
-    id: 1,
-    name: 'Laptop',
-    price: 1000,
-    image:
-      'https://fdn.gsmarena.com/imgroot/reviews/24/apple-iphone-16/lifestyle/-1024w2/gsmarena_001.jpg',
-    inStock: true,
-  };
+export class ProductDetail implements OnInit {
+  product: Product | null = null;
+  categoryName: string = 'Không rõ';
+  isLoading = true;
 
-  productId: string | null = null;
+  constructor(
+    private route: ActivatedRoute,
+    private productService: ProductService,
+    private categoryService: CategoryService
+  ) {}
 
-  constructor(private route: ActivatedRoute) {}
-  // useEffect
-  ngOnInit() {
-    // subscribe = then /catch
-    // this.route.paramMap.subscribe((params) => {
-    //   this.productId = params.get('id');
-    // });
-    this.productId = this.route.snapshot.paramMap.get('id');
-    // snapshot
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if (id) {
+      this.productService.getProductById(id).subscribe({
+        next: (data) => {
+          this.product = data;
+          this.isLoading = false;
+          this.loadCategoryName();
+        },
+        error: (err) => {
+          console.error('Lỗi khi lấy sản phẩm:', err);
+          this.product = null;
+          this.isLoading = false;
+        },
+      });
+    } else {
+      this.product = null;
+      this.isLoading = false;
+    }
+  }
+
+  loadCategoryName(): void {
+    if (!this.product) return;
+
+    this.categoryService.getCategoryById(this.product.categoryId).subscribe({
+      next: (category: Category) => {
+        this.categoryName = category?.name || 'Không rõ';
+      },
+      error: (err) => {
+        console.error('Lỗi khi lấy danh mục:', err);
+        this.categoryName = 'Không rõ';
+      },
+    });
   }
 }

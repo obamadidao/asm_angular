@@ -1,0 +1,78 @@
+<h2>Edit Product</h2>
+
+<div *ngIf="isLoading">
+  <p>Đang tải sản phẩm...</p>
+</div>
+
+<form
+  *ngIf="!isLoading && product"
+  #form="ngForm"
+  (ngSubmit)="handleSubmit(form)"
+  style="max-width: 600px; margin: auto;"
+>
+  <!-- Tên sản phẩm -->
+  <div class="mb-3">
+    <label for="name" class="form-label">Product Name</label>
+    <input
+      id="name"
+      name="name"
+      type="text"
+      class="form-control"
+      [(ngModel)]="product.name"
+      required
+    />
+  </div>
+
+  <!-- Giá -->
+  <div class="mb-3">
+    <label for="price" class="form-label">Price</label>
+    <input
+      id="price"
+      name="price"
+      type="number"
+      class="form-control"
+      [(ngModel)]="product.price"
+      required
+    />
+  </div>
+
+  <!-- Danh mục -->
+  <div class="mb-3">
+    <label for="categoryId" class="form-label">Category</label>
+    <select
+      id="categoryId"
+      name="categoryId"
+      class="form-select"
+      [(ngModel)]="product.categoryId"
+      required
+    >
+      <option value="" disabled>-- Chọn danh mục --</option>
+      <option *ngFor="let c of categories" [value]="c.id">
+        {{ c.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Ảnh -->
+  <div class="mb-3">
+    <label for="image" class="form-label">Product Image</label>
+    <input
+      id="image"
+      type="file"
+      class="form-control"
+      (change)="onImageSelected($event)"
+    />
+
+    <div *ngIf="product.image" class="mt-2">
+      <p class="mb-1">Ảnh hiện tại:</p>
+      <img
+        [src]="product.image"
+        alt="Product Image"
+        class="img-thumbnail"
+        style="width: 150px; height: 150px; object-fit: cover;"
+      />
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-success">Cập nhật</button>
+</form>

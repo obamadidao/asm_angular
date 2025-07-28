@@ -7,7 +7,7 @@ import { SidebarComponent } from './sidebar/sidebar'; // ✅ Đúng tên class e
   standalone: true,
   imports: [RouterOutlet, SidebarComponent], // ✅ Đúng tên đã import
   templateUrl: './app.html',
-  styleUrls: ['./app.css'], // ✅ Sửa từ styleUrl -> styleUrls
+  styleUrls: ['./app.css'], 
 })
 export class App {
   protected title = 'angular-su25';
