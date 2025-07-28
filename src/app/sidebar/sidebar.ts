@@ -12,6 +12,7 @@ import { NgIf } from '@angular/common'; // 👈 Thêm dòng này
 export class SidebarComponent {
   showProducts = false;
   showCategories = false;
+  showBrands = false; // 👈 Thêm biến này
 
   toggleProducts() {
     this.showProducts = !this.showProducts;
@@ -20,4 +21,9 @@ export class SidebarComponent {
   toggleCategories() {
     this.showCategories = !this.showCategories;
   }
+
+  toggleBrands() {
+    this.showBrands = !this.showBrands; // 👈 Thêm hàm này
+  }
 }
+

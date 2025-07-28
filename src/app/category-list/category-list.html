@@ -1,16 +1,25 @@
 <h2>Category List</h2>
 
-<table>
-  <thead>
+<table class="table table-bordered table-striped">
+  <thead class="table-light">
     <tr>
       <th>ID</th>
       <th>Name</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let category of categories">
       <td>{{ category.id }}</td>
       <td>{{ category.name }}</td>
+      <td>
+        <button class="btn btn-warning btn-sm me-2" (click)="onEdit(category.id)">
+          Sửa
+        </button>
+        <button class="btn btn-danger btn-sm" (click)="onDelete(category.id)">
+          Xóa
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>

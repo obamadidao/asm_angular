@@ -9,6 +9,11 @@ interface Category {
   name: string;
 }
 
+interface Brand {
+  id: number;
+  name: string;
+}
+
 @Component({
   selector: 'app-product-create',
   standalone: true,
@@ -21,10 +26,12 @@ export class ProductCreate implements OnInit {
     name: '',
     price: null as number | null,
     categoryId: null as number | null,
+    brandId: null as number | null,
     image: '',
   };
 
   categories: Category[] = [];
+  brands: Brand[] = [];
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -32,6 +39,11 @@ export class ProductCreate implements OnInit {
     this.http.get<Category[]>('http://localhost:3000/categories').subscribe({
       next: (res) => (this.categories = res),
       error: () => alert('Không thể tải danh sách danh mục'),
+    });
+
+    this.http.get<Brand[]>('http://localhost:3000/brands').subscribe({
+      next: (res) => (this.brands = res),
+      error: () => alert('Không thể tải danh sách thương hiệu'),
     });
   }
 
@@ -49,19 +61,37 @@ export class ProductCreate implements OnInit {
   }
 
   handleSubmit(form: NgForm): void {
-  const { name, price, categoryId, image } = this.product;
+  console.log('Form valid:', form.valid);
+  console.log('Product data before submit:', this.product);
 
-  const isValidName = name.trim() !== '';
-  const isValidPrice = price !== null && !isNaN(Number(price));
-  const isValidCategory = categoryId !== null && !isNaN(Number(categoryId));
-  const isValidImage = image.trim() !== '';
+  const isValidName = this.product.name.trim() !== '';
+  const isValidPrice = typeof this.product.price === 'number' && !isNaN(this.product.price);
+  const isValidCategory = this.product.categoryId !== null && this.product.categoryId !== undefined;
+  const isValidBrand = this.product.brandId !== null && this.product.brandId !== undefined;
+  const isValidImage = this.product.image.trim() !== '';
 
-  if (form.valid && isValidName && isValidPrice && isValidCategory && isValidImage) {
+  console.log({
+    isValidName,
+    isValidPrice,
+    isValidCategory,
+    isValidBrand,
+    isValidImage,
+  });
+
+  if (
+    form.valid &&
+    isValidName &&
+    isValidPrice &&
+    isValidCategory &&
+    isValidBrand &&
+    isValidImage
+  ) {
     const newProduct = {
-      name: name.trim(),
-      price: Number(price),
-      categoryId: Number(categoryId),
-      image,
+      name: this.product.name.trim(),
+      price: this.product.price!,
+      categoryId: this.product.categoryId!,
+      brandId: this.product.brandId!,
+      image: this.product.image,
     };
 
     this.http.post('http://localhost:3000/products', newProduct).subscribe({
@@ -75,8 +105,7 @@ export class ProductCreate implements OnInit {
       },
     });
   } else {
-    alert('Vui lòng điền đầy đủ thông tin, chọn danh mục và tải ảnh.');
+    alert('Vui lòng điền đầy đủ thông tin, chọn danh mục, thương hiệu và tải ảnh.');
   }
 }
-
 }

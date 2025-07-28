@@ -1,9 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
-import { ProductService, Product, CategoryService, Category } from '../service';
+import { RouterModule, Router } from '@angular/router';
+import {
+  ProductService,
+  Product,
+  CategoryService,
+  Category,
+  BrandService,
+  Brand
+} from '../service';
 
 @Component({
   selector: 'app-product-list',
@@ -15,11 +21,13 @@ import { ProductService, Product, CategoryService, Category } from '../service';
 export class ProductList implements OnInit {
   products: Product[] = [];
   categories: Category[] = [];
+  brands: Brand[] = [];
   filterText = '';
 
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
+    private brandService: BrandService,
     private router: Router
   ) {}
 
@@ -41,32 +49,44 @@ export class ProductList implements OnInit {
       },
       error: (err: any) => console.error('Error loading categories', err),
     });
+
+    this.brandService.getAllBrands().subscribe({
+      next: (data: Brand[]) => {
+        this.brands = data;
+      },
+      error: (err: any) => console.error('Error loading brands', err),
+    });
   }
 
   filterProducts(): Product[] {
     const search = this.filterText.toLowerCase();
     return this.products.filter(product =>
       product.name.toLowerCase().includes(search) ||
-      (product.id !== undefined && product.id.toString().includes(search))
+      (product.id !== undefined && product.id.toLowerCase().includes(search))
     );
   }
 
- getCategoryName(categoryId: any): string {
-  return (
-    this.categories.find(c => String(c.id) === String(categoryId))?.name || 'Unknown'
-  );
-}
+  getCategoryName(categoryId: string): string {
+    return (
+      this.categories.find(c => c.id === categoryId)?.name || 'Unknown'
+    );
+  }
 
+  getBrandName(brandId: string): string {
+    return (
+      this.brands.find(b => b.id === brandId)?.name || 'Unknown'
+    );
+  }
 
-  editProduct(id: number): void {
+  editProduct(id: string): void {
     this.router.navigate(['/products', id, 'edit']);
   }
 
-  viewProduct(id: number): void {
+  viewProduct(id: string): void {
     this.router.navigate(['/products', id]);
   }
 
-  deleteProduct(id: number): void {
+  deleteProduct(id: string): void {
     if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')) {
       this.productService.deleteProduct(id).subscribe({
         next: () => {

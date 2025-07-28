@@ -2,19 +2,31 @@
   <p>Đang tải chi tiết sản phẩm...</p>
 </div>
 
-<div *ngIf="!isLoading && product; else notFound" class="product-detail-card" style="max-width: 600px; margin: 40px auto; padding: 20px; border: 1px solid #ddd; border-radius: 12px; background-color: #fff;">
+<div
+  *ngIf="!isLoading && product; else notFound"
+  class="product-detail-card"
+  style="
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background-color: #fff;
+  "
+>
   <h2 style="margin-bottom: 1rem;">{{ product.name }}</h2>
-  
+
   <img
     *ngIf="product.image"
     [src]="product.image"
     alt="{{ product.name }}"
     style="max-width: 100%; height: auto; object-fit: contain; border: 1px solid #ccc; padding: 10px; border-radius: 8px; margin-bottom: 1rem;"
   />
-  
+
   <p><strong>ID:</strong> {{ product.id }}</p>
   <p><strong>Giá:</strong> {{ product.price | currency: 'VND':'symbol':'1.0-0' }}</p>
   <p><strong>Danh mục:</strong> {{ categoryName }}</p>
+  <p><strong>Thương hiệu:</strong> {{ brandName }}</p>
 </div>
 
 <ng-template #notFound>

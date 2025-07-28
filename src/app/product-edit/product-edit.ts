@@ -2,7 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { ProductService, Product, CategoryService, Category } from '../service';
+import {
+  ProductService,
+  Product,
+  CategoryService,
+  Category,
+  BrandService,
+  Brand,
+} from '../service';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({
@@ -16,23 +23,23 @@ export class ProductEdit implements OnInit {
   product: Product | null = null;
   isLoading = true;
   categories: Category[] = [];
+  brands: Brand[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
     private categoryService: CategoryService,
+    private brandService: BrandService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    // Lấy id dưới dạng string, không ép số nữa
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.productService.getProductById(id).subscribe({
         next: (data) => {
-          this.product = {
-            ...data,
-            categoryId: Number(data.categoryId), // ensure correct type
-          };
+          this.product = { ...data };
           this.isLoading = false;
         },
         error: (err) => {
@@ -43,12 +50,13 @@ export class ProductEdit implements OnInit {
     }
 
     this.categoryService.getAllCategories().subscribe({
-      next: (data) => {
-        this.categories = data;
-      },
-      error: (err) => {
-        console.error('Lỗi khi lấy danh mục:', err);
-      },
+      next: (data) => (this.categories = data),
+      error: (err) => console.error('Lỗi khi lấy danh mục:', err),
+    });
+
+    this.brandService.getAllBrands().subscribe({
+      next: (data) => (this.brands = data),
+      error: (err) => console.error('Lỗi khi lấy thương hiệu:', err),
     });
   }
 
@@ -69,7 +77,10 @@ export class ProductEdit implements OnInit {
 
   handleSubmit(form: NgForm): void {
     if (form.valid && this.product) {
-      this.productService.updateProduct(this.product.id, this.product).subscribe({
+      // Đảm bảo price là number trước khi gửi
+      this.product.price = Number(this.product.price);
+
+      this.productService.updateProduct(this.product.id.toString(), this.product).subscribe({
         next: () => {
           alert('Cập nhật sản phẩm thành công!');
           this.router.navigate(['/products']);
@@ -79,6 +90,8 @@ export class ProductEdit implements OnInit {
           alert('Cập nhật thất bại.');
         },
       });
+    } else {
+      alert('Vui lòng điền đầy đủ và chính xác thông tin.');
     }
   }
 }

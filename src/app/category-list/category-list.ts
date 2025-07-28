@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CategoryService, Category } from '../service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-category-list',
@@ -12,7 +13,7 @@ import { CategoryService, Category } from '../service';
 export class CategoryList implements OnInit {
   categories: Category[] = [];
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(private categoryService: CategoryService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadCategories();
@@ -23,5 +24,26 @@ export class CategoryList implements OnInit {
       next: (data) => (this.categories = data),
       error: (err) => console.error('Lỗi tải danh mục:', err),
     });
+  }
+
+  // Sửa id sang string
+  onDelete(id: string): void {
+    if (confirm('Bạn có chắc muốn xóa danh mục này?')) {
+      this.categoryService.deleteCategory(id).subscribe({
+        next: () => {
+          alert('Xóa danh mục thành công');
+          this.loadCategories(); // reload danh sách
+        },
+        error: (err) => {
+          console.error('Lỗi khi xóa:', err);
+          alert('Xóa thất bại');
+        },
+      });
+    }
+  }
+
+  // Sửa id sang string
+  onEdit(id: string): void {
+    this.router.navigate(['/categories/edit', id]);
   }
 }

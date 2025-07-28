@@ -47,9 +47,22 @@
       required
     >
       <option value="" disabled>-- Chọn danh mục --</option>
-      <option *ngFor="let c of categories" [value]="c.id">
-        {{ c.name }}
-      </option>
+      <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+    </select>
+  </div>
+
+  <!-- Thương hiệu -->
+  <div class="mb-3">
+    <label for="brandId" class="form-label">Brand</label>
+    <select
+      id="brandId"
+      name="brandId"
+      class="form-select"
+      [(ngModel)]="product.brandId"
+      required
+    >
+      <option value="" disabled>-- Chọn thương hiệu --</option>
+      <option *ngFor="let b of brands" [value]="b.id">{{ b.name }}</option>
     </select>
   </div>
 

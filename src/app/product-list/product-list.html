@@ -15,6 +15,7 @@
       <th>Tên sản phẩm</th>
       <th>Giá</th>
       <th>Danh mục</th>
+      <th>Thương hiệu</th> 
       <th>Thao tác</th>
     </tr>
   </thead>
@@ -36,11 +37,11 @@
       </td>
       <td>{{ product.price | currency: 'VND':'symbol':'1.0-0' }}</td>
       <td>{{ getCategoryName(product.categoryId) }}</td>
-<td>
-  <button *ngIf="product.id != null" (click)="editProduct(product.id)" class="edit-btn">Sửa</button>
-  <button *ngIf="product.id != null" (click)="deleteProduct(product.id)" class="delete-btn">Xoá</button>
-</td>
+      <td>{{ getBrandName(product.brandId) }}</td> 
+      <td>
+        <button *ngIf="product.id != null" (click)="editProduct(product.id)" class="edit-btn">Sửa</button>
+        <button *ngIf="product.id != null" (click)="deleteProduct(product.id)" class="delete-btn">Xoá</button>
+      </td>
     </tr>
   </tbody>
 </table>
-

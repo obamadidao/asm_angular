@@ -57,10 +57,26 @@
       [(ngModel)]="product.categoryId"
       required
     >
-      <option value="" disabled selected>-- Chọn danh mục --</option>
-      <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+      <option [ngValue]="null" disabled selected>-- Chọn danh mục --</option>
+      <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
     </select>
   </div>
 
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <!-- Brand -->
+  <div class="mb-3">
+    <label for="brandId" class="form-label">Brand</label>
+    <select
+      id="brandId"
+      name="brandId"
+      class="form-select"
+      [(ngModel)]="product.brandId"
+      required
+    >
+      <option [ngValue]="null" disabled selected>-- Chọn thương hiệu --</option>
+      <option *ngFor="let b of brands" [ngValue]="b.id">{{ b.name }}</option>
+    </select>
+  </div>
+
+  <!-- Nút Tạo sản phẩm -->
+  <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Tạo sản phẩm</button>
 </form>
