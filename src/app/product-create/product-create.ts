@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
 interface Category {
   id: number;
@@ -22,6 +24,12 @@ interface Brand {
   styleUrls: ['./product-create.css'],
 })
 export class ProductCreate implements OnInit {
+  private notyf = new Notyf({
+    duration: 3000,
+    position: { x: 'right', y: 'top' },
+    dismissible: true,
+  });
+
   product = {
     name: '',
     price: null as number | null,
@@ -38,12 +46,16 @@ export class ProductCreate implements OnInit {
   ngOnInit(): void {
     this.http.get<Category[]>('http://localhost:3000/categories').subscribe({
       next: (res) => (this.categories = res),
-      error: () => alert('Không thể tải danh sách danh mục'),
+      error: () => {
+        this.notyf.error('Không thể tải danh sách danh mục');
+      },
     });
 
     this.http.get<Brand[]>('http://localhost:3000/brands').subscribe({
       next: (res) => (this.brands = res),
-      error: () => alert('Không thể tải danh sách thương hiệu'),
+      error: () => {
+        this.notyf.error('Không thể tải danh sách thương hiệu');
+      },
     });
   }
 
@@ -61,51 +73,66 @@ export class ProductCreate implements OnInit {
   }
 
   handleSubmit(form: NgForm): void {
-  console.log('Form valid:', form.valid);
-  console.log('Product data before submit:', this.product);
+    console.log('Form valid:', form.valid);
+    console.log('Product data before submit:', this.product);
 
-  const isValidName = this.product.name.trim() !== '';
-  const isValidPrice = typeof this.product.price === 'number' && !isNaN(this.product.price);
-  const isValidCategory = this.product.categoryId !== null && this.product.categoryId !== undefined;
-  const isValidBrand = this.product.brandId !== null && this.product.brandId !== undefined;
-  const isValidImage = this.product.image.trim() !== '';
+    const isValidName = this.product.name.trim() !== '';
+    const isValidPrice =
+      typeof this.product.price === 'number' && !isNaN(this.product.price);
+    const isValidCategory =
+      this.product.categoryId !== null && this.product.categoryId !== undefined;
+    const isValidBrand =
+      this.product.brandId !== null && this.product.brandId !== undefined;
+    const isValidImage = this.product.image.trim() !== '';
 
-  console.log({
-    isValidName,
-    isValidPrice,
-    isValidCategory,
-    isValidBrand,
-    isValidImage,
-  });
-
-  if (
-    form.valid &&
-    isValidName &&
-    isValidPrice &&
-    isValidCategory &&
-    isValidBrand &&
-    isValidImage
-  ) {
-    const newProduct = {
-      name: this.product.name.trim(),
-      price: this.product.price!,
-      categoryId: this.product.categoryId!,
-      brandId: this.product.brandId!,
-      image: this.product.image,
-    };
-
-    this.http.post('http://localhost:3000/products', newProduct).subscribe({
-      next: () => {
-        alert('Sản phẩm đã được thêm thành công!');
-        this.router.navigate(['/products']);
-      },
-      error: (err) => {
-        console.error('Lỗi khi thêm sản phẩm:', err);
-        alert('Thêm sản phẩm thất bại.');
-      },
+    console.log({
+      isValidName,
+      isValidPrice,
+      isValidCategory,
+      isValidBrand,
+      isValidImage,
     });
-  } else {
-    alert('Vui lòng điền đầy đủ thông tin, chọn danh mục, thương hiệu và tải ảnh.');
+
+    if (
+      form.valid &&
+      isValidName &&
+      isValidPrice &&
+      isValidCategory &&
+      isValidBrand &&
+      isValidImage
+    ) {
+      const newProduct = {
+        name: this.product.name.trim(),
+        price: this.product.price!,
+        categoryId: this.product.categoryId!,
+        brandId: this.product.brandId!,
+        image: this.product.image,
+      };
+
+      this.http.post('http://localhost:3000/products', newProduct).subscribe({
+        next: () => {
+          this.notyf.success('Sản phẩm đã được thêm thành công!');
+          this.router.navigate(['/products']);
+        },
+        error: (err) => {
+          console.error('Lỗi khi thêm sản phẩm:', err);
+          this.notyf.error('Thêm sản phẩm thất bại.');
+        },
+      });
+    } else {
+      const missing: string[] = [];
+      if (!isValidName) missing.push('tên');
+      if (!isValidPrice) missing.push('giá');
+      if (!isValidCategory) missing.push('danh mục');
+      if (!isValidBrand) missing.push('thương hiệu');
+      if (!isValidImage) missing.push('ảnh');
+
+      const msg =
+        missing.length > 0
+          ? `Thiếu hoặc không hợp lệ: ${missing.join(', ')}.`
+          : 'Vui lòng kiểm tra lại form.';
+
+      this.notyf.open({ type: 'info', message: msg });
+    }
   }
-}
 }

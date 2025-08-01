@@ -17,23 +17,41 @@ export class BrandCreate {
 
   constructor(private brandService: BrandService, private router: Router) {}
 
-createBrand(): void {
-  if (!this.brandName.trim()) {
-    this.errorMessage = 'Tên danh mục không được để trống.';
-    return;
+  createBrand(): void {
+    const trimmedName = this.brandName.trim();
+
+    if (!trimmedName) {
+      this.errorMessage = 'Tên thương hiệu không được để trống.';
+      return;
+    }
+
+    // Kiểm tra trùng tên trước khi tạo
+    this.brandService.getAllBrands().subscribe({
+      next: (brands) => {
+        const isDuplicate = brands.some(
+          (b) => b.name.toLowerCase() === trimmedName.toLowerCase()
+        );
+
+        if (isDuplicate) {
+          this.errorMessage = 'Tên thương hiệu đã tồn tại.';
+        } else {
+          const newBrand: Omit<Brand, 'id'> = { name: trimmedName };
+          this.brandService.createBrand(newBrand).subscribe({
+            next: () => {
+              alert('Tạo thương hiệu thành công!');
+              this.router.navigate(['/brands']);
+            },
+            error: (err: any) => {
+              console.error('Lỗi tạo thương hiệu:', err);
+              this.errorMessage = 'Đã xảy ra lỗi khi tạo thương hiệu.';
+            },
+          });
+        }
+      },
+      error: (err) => {
+        console.error('Lỗi kiểm tra thương hiệu:', err);
+        this.errorMessage = 'Không thể kiểm tra tên thương hiệu.';
+      },
+    });
   }
-
-  const newBrand: Omit<Brand, 'id'> = { name: this.brandName.trim() };
-
-  this.brandService.createBrand(newBrand).subscribe({
-    next: () => {
-      alert('Tạo danh mục thành công!');
-      this.router.navigate(['/brands']);
-    },
-    error: (err: any) => {  // <-- thêm ': any' ở đây
-      console.error('Lỗi tạo danh mục:', err);
-      this.errorMessage = 'Đã xảy ra lỗi khi tạo danh mục.';
-    },
-  });
-}
 }

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { BrandService, Brand } from '../service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-brand-list',
@@ -12,7 +13,7 @@ import { BrandService, Brand } from '../service';
 export class BrandList implements OnInit {
   brands: Brand[] = [];
 
-  constructor(private brandService: BrandService) {}
+  constructor(private brandService: BrandService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadBrands();
@@ -26,18 +27,23 @@ export class BrandList implements OnInit {
   }
 
   // Sửa id sang string
-  deleteBrand(id: string): void {
-    if (confirm('Bạn có chắc chắn muốn xóa thương hiệu này không?')) {
+  onDelete(id: string): void {
+    if (confirm('Bạn có chắc muốn xóa danh mục này?')) {
       this.brandService.deleteBrand(id).subscribe({
         next: () => {
-          alert('Xóa thương hiệu thành công!');
-          this.loadBrands(); // Tải lại danh sách sau khi xóa
+          alert('Xóa danh mục thành công');
+          this.loadBrands(); // reload danh sách
         },
         error: (err) => {
-          console.error('Lỗi khi xóa thương hiệu:', err);
-          alert('Xóa thương hiệu thất bại.');
+          console.error('Lỗi khi xóa:', err);
+          alert('Xóa thất bại');
         },
       });
     }
+  }
+
+  // Sửa id sang string
+  onEdit(id: string): void {
+   this.router.navigate(['/brands', id, 'edit']);
   }
 }

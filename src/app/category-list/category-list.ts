@@ -44,6 +44,6 @@ export class CategoryList implements OnInit {
 
   // Sửa id sang string
   onEdit(id: string): void {
-    this.router.navigate(['/categories/edit', id]);
+   this.router.navigate(['/categories', id, 'edit']);
   }
 }

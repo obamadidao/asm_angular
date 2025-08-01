@@ -8,9 +8,11 @@ import { ProductEdit } from './product-edit/product-edit';
 
 import { CategoryList } from './category-list/category-list';
 import { CategoryCreate } from './category-create/category-create';
+import { CategoryEdit } from './category-edit/category-edit';
 
 import { BrandList } from './brand-list/brand-list';
 import { BrandCreate } from './brand-create/brand-create';
+import { BrandEdit } from './brand-edit/brand-edit';
 
 export const routes: Routes = [
   { path: '', component: HomepageComponent },
@@ -24,10 +26,12 @@ export const routes: Routes = [
   // Categories
   { path: 'categories', component: CategoryList },
   { path: 'categories/create', component: CategoryCreate },
+  { path: 'categories/:id/edit', component: CategoryEdit },
 
   // Brands
   { path: 'brands', component: BrandList },
   { path: 'brands/create', component: BrandCreate },
+  { path: 'brands/:id/edit', component: BrandEdit },
 
   // Fallback route (optional)
   { path: '**', redirectTo: '' }

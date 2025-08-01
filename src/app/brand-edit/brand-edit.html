@@ -1,0 +1,17 @@
+<h2>Edit Brand</h2>
+
+<form *ngIf="brand" (ngSubmit)="updateBrand()">
+  <label for="brandName">Brand Name:</label>
+  <input
+    id="brandName"
+    type="text"
+    [(ngModel)]="brandName"
+    name="brandName"
+    required
+  />
+  <br /><br />
+  <button type="submit">Update</button>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+</form>
+
+<p *ngIf="!brand" class="error">{{ errorMessage }}</p>

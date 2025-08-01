@@ -23,7 +23,7 @@ export class CategoryEdit implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.categoryService.getCategoryById(id).subscribe({
         next: (data) => {
@@ -46,19 +46,40 @@ export class CategoryEdit implements OnInit {
       return;
     }
 
-    const updatedCategory: Category = {
-      id: this.category.id,
-      name: this.categoryName.trim(),
-    };
+    const trimmedName = this.categoryName.trim();
 
-    this.categoryService.updateCategory(updatedCategory.id, updatedCategory).subscribe({
-      next: () => {
-        alert('Cập nhật danh mục thành công!');
-        this.router.navigate(['/categories']);
+    // Kiểm tra trùng tên trước khi cập nhật
+    this.categoryService.getAllCategories().subscribe({
+      next: (categories) => {
+        const isDuplicate = categories.some(
+          (b) =>
+            b.name.toLowerCase() === trimmedName.toLowerCase() &&
+            b.id !== this.category!.id
+        );
+
+        if (isDuplicate) {
+          this.errorMessage = 'Tên thương hiệu đã tồn tại.';
+        } else {
+          const updatedCategory: Category = {
+            id: this.category!.id,
+            name: trimmedName,
+          };
+
+          this.categoryService.updateCategory(updatedCategory.id, updatedCategory).subscribe({
+            next: () => {
+              alert('Cập nhật thương hiệu thành công!');
+              this.router.navigate(['/categories']);
+            },
+            error: (err) => {
+              console.error('Lỗi cập nhật danh mục:', err);
+              this.errorMessage = 'Đã xảy ra lỗi khi cập nhật danh mục.';
+            },
+          });
+        }
       },
       error: (err) => {
-        console.error('Lỗi cập nhật danh mục:', err);
-        this.errorMessage = 'Đã xảy ra lỗi khi cập nhật danh mục.';
+        console.error('Lỗi kiểm tra tên danh mục:', err);
+        this.errorMessage = 'Không thể kiểm tra tên danh mục.';
       },
     });
   }
