@@ -2,7 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryService, Category } from '../service';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
 @Component({
   selector: 'app-category-edit',
@@ -15,6 +17,12 @@ export class CategoryEdit implements OnInit {
   category: Category | null = null;
   categoryName = '';
   errorMessage = '';
+
+  private notyf = new Notyf({
+    duration: 3000,
+    position: { x: 'right', y: 'top' },
+    dismissible: true,
+  });
 
   constructor(
     private categoryService: CategoryService,
@@ -30,8 +38,7 @@ export class CategoryEdit implements OnInit {
           this.category = data;
           this.categoryName = data.name;
         },
-        error: (err) => {
-          console.error('Lỗi tải danh mục:', err);
+        error: () => {
           this.errorMessage = 'Không tìm thấy danh mục này.';
         },
       });
@@ -40,25 +47,25 @@ export class CategoryEdit implements OnInit {
     }
   }
 
-  updateCategory(): void {
-    if (!this.category || !this.categoryName.trim()) {
-      this.errorMessage = 'Tên danh mục không được để trống.';
+  updateCategory(form: NgForm): void {
+    if (!this.category || form.invalid || !this.categoryName.trim()) {
+      this.notyf.error('Tên danh mục không được để trống.');
       return;
     }
 
     const trimmedName = this.categoryName.trim();
 
-    // Kiểm tra trùng tên trước khi cập nhật
+    // Kiểm tra trùng tên
     this.categoryService.getAllCategories().subscribe({
       next: (categories) => {
         const isDuplicate = categories.some(
-          (b) =>
-            b.name.toLowerCase() === trimmedName.toLowerCase() &&
-            b.id !== this.category!.id
+          (c) =>
+            c.name.toLowerCase() === trimmedName.toLowerCase() &&
+            c.id !== this.category!.id
         );
 
         if (isDuplicate) {
-          this.errorMessage = 'Tên thương hiệu đã tồn tại.';
+          this.notyf.error('Tên danh mục đã tồn tại.');
         } else {
           const updatedCategory: Category = {
             id: this.category!.id,
@@ -67,19 +74,17 @@ export class CategoryEdit implements OnInit {
 
           this.categoryService.updateCategory(updatedCategory.id, updatedCategory).subscribe({
             next: () => {
-              alert('Cập nhật thương hiệu thành công!');
+              this.notyf.success('Cập nhật danh mục thành công!');
               this.router.navigate(['/categories']);
             },
-            error: (err) => {
-              console.error('Lỗi cập nhật danh mục:', err);
-              this.errorMessage = 'Đã xảy ra lỗi khi cập nhật danh mục.';
+            error: () => {
+              this.notyf.error('Đã xảy ra lỗi khi cập nhật danh mục.');
             },
           });
         }
       },
-      error: (err) => {
-        console.error('Lỗi kiểm tra tên danh mục:', err);
-        this.errorMessage = 'Không thể kiểm tra tên danh mục.';
+      error: () => {
+        this.notyf.error('Không thể kiểm tra tên danh mục.');
       },
     });
   }

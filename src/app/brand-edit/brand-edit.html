@@ -1,17 +1,37 @@
-<h2>Edit Brand</h2>
+<div class="container mt-4">
+  <h2>Edit Brand</h2>
 
-<form *ngIf="brand" (ngSubmit)="updateBrand()">
-  <label for="brandName">Brand Name:</label>
-  <input
-    id="brandName"
-    type="text"
-    [(ngModel)]="brandName"
-    name="brandName"
-    required
-  />
-  <br /><br />
-  <button type="submit">Update</button>
-  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-</form>
+  <form *ngIf="brand" #form="ngForm" (ngSubmit)="updateBrand(form)" novalidate>
+    <!-- Brand Name -->
+    <div class="mb-3">
+      <label for="brandName" class="form-label">
+        Brand Name <span style="color:red">*</span>
+      </label>
+      <input
+        id="brandName"
+        type="text"
+        name="brandName"
+        class="form-control"
+        [(ngModel)]="brandName"
+        required
+        #name="ngModel"
+        [ngClass]="{'is-invalid': name.invalid && (name.dirty || name.touched)}"
+        placeholder="Enter brand name"
+      />
+      <div class="invalid-feedback" *ngIf="name.invalid && (name.dirty || name.touched)">
+        Tên thương hiệu là bắt buộc
+      </div>
+    </div>
 
-<p *ngIf="!brand" class="error">{{ errorMessage }}</p>
+    <!-- Submit -->
+    <button
+      type="submit"
+      class="btn btn-success"
+      [disabled]="form.invalid"
+    >
+      Cập nhật
+    </button>
+  </form>
+
+  <p *ngIf="!brand" class="text-danger mt-3">{{ errorMessage }}</p>
+</div>

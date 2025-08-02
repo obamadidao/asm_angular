@@ -10,6 +10,9 @@ import {
   BrandService,
   Brand
 } from '../service';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-product-list',
@@ -23,6 +26,12 @@ export class ProductList implements OnInit {
   categories: Category[] = [];
   brands: Brand[] = [];
   filterText = '';
+
+  private notyf = new Notyf({
+    duration: 3000,
+    position: { x: 'right', y: 'top' },
+    dismissible: true,
+  });
 
   constructor(
     private productService: ProductService,
@@ -40,21 +49,27 @@ export class ProductList implements OnInit {
       next: (data: Product[]) => {
         this.products = data;
       },
-      error: (err: any) => console.error('Error loading products', err),
+      error: () => {
+        this.notyf.error('Không tải được danh sách sản phẩm.');
+      },
     });
 
     this.categoryService.getAllCategories().subscribe({
       next: (data: Category[]) => {
         this.categories = data;
       },
-      error: (err: any) => console.error('Error loading categories', err),
+      error: () => {
+        this.notyf.error('Không tải được danh mục.');
+      },
     });
 
     this.brandService.getAllBrands().subscribe({
       next: (data: Brand[]) => {
         this.brands = data;
       },
-      error: (err: any) => console.error('Error loading brands', err),
+      error: () => {
+        this.notyf.error('Không tải được thương hiệu.');
+      },
     });
   }
 
@@ -62,20 +77,16 @@ export class ProductList implements OnInit {
     const search = this.filterText.toLowerCase();
     return this.products.filter(product =>
       product.name.toLowerCase().includes(search) ||
-      (product.id !== undefined && product.id.toLowerCase().includes(search))
+      (typeof product.id === 'string' && product.id.toLowerCase().includes(search))
     );
   }
 
   getCategoryName(categoryId: string): string {
-    return (
-      this.categories.find(c => c.id === categoryId)?.name || 'Unknown'
-    );
+    return this.categories.find(c => c.id === categoryId)?.name || 'Unknown';
   }
 
   getBrandName(brandId: string): string {
-    return (
-      this.brands.find(b => b.id === brandId)?.name || 'Unknown'
-    );
+    return this.brands.find(b => b.id === brandId)?.name || 'Unknown';
   }
 
   editProduct(id: string): void {
@@ -86,18 +97,28 @@ export class ProductList implements OnInit {
     this.router.navigate(['/products', id]);
   }
 
-  deleteProduct(id: string): void {
-    if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')) {
-      this.productService.deleteProduct(id).subscribe({
-        next: () => {
-          alert('Xóa sản phẩm thành công!');
-          this.loadData();
-        },
-        error: (err: any) => {
-          console.error('Lỗi khi xóa sản phẩm:', err);
-          alert('Đã xảy ra lỗi khi xóa sản phẩm.');
-        },
-      });
-    }
+  deleteProduct(product: Product): void {
+    Swal.fire({
+      title: 'Xác nhận',
+      html: `Bạn có chắc chắn muốn xóa sản phẩm <strong>${product.name}</strong> không?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy',
+      confirmButtonColor: '#d33',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productService.deleteProduct(product.id.toString()).subscribe({
+          next: () => {
+            this.notyf.success(`Đã xóa sản phẩm "${product.name}" thành công!`);
+            this.loadData();
+          },
+          error: () => {
+            this.notyf.error(`Xóa sản phẩm "${product.name}" thất bại.`);
+          },
+        });
+      }
+    });
   }
 }

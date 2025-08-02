@@ -1,17 +1,37 @@
-<h2>Edit Category</h2>
+<div class="container mt-4">
+  <h2>Edit Category</h2>
 
-<form *ngIf="category" (ngSubmit)="updateCategory()">
-  <label for="categoryName">Category Name:</label>
-  <input
-    id="categoryName"
-    type="text"
-    [(ngModel)]="categoryName"
-    name="categoryName"
-    required
-  />
-  <br /><br />
-  <button type="submit">Update</button>
-  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-</form>
+  <form *ngIf="category" #form="ngForm" (ngSubmit)="updateCategory(form)" novalidate>
+    <!-- Category Name -->
+    <div class="mb-3">
+      <label for="categoryName" class="form-label">
+        Category Name <span style="color:red">*</span>
+      </label>
+      <input
+        id="categoryName"
+        type="text"
+        name="categoryName"
+        class="form-control"
+        [(ngModel)]="categoryName"
+        required
+        #name="ngModel"
+        [ngClass]="{'is-invalid': name.invalid && (name.dirty || name.touched)}"
+        placeholder="Enter category name"
+      />
+      <div class="invalid-feedback" *ngIf="name.invalid && (name.dirty || name.touched)">
+        Tên danh mục là bắt buộc
+      </div>
+    </div>
 
-<p *ngIf="!category" class="error">{{ errorMessage }}</p>
+    <!-- Submit -->
+    <button
+      type="submit"
+      class="btn btn-success"
+      [disabled]="form.invalid"
+    >
+      Cập nhật
+    </button>
+  </form>
+
+  <p *ngIf="!category" class="text-danger mt-3">{{ errorMessage }}</p>
+</div>

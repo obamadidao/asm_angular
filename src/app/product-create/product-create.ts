@@ -73,25 +73,16 @@ export class ProductCreate implements OnInit {
   }
 
   handleSubmit(form: NgForm): void {
-    console.log('Form valid:', form.valid);
-    console.log('Product data before submit:', this.product);
-
     const isValidName = this.product.name.trim() !== '';
     const isValidPrice =
-      typeof this.product.price === 'number' && !isNaN(this.product.price);
+      typeof this.product.price === 'number' &&
+      !isNaN(this.product.price) &&
+      this.product.price >= 0;
     const isValidCategory =
       this.product.categoryId !== null && this.product.categoryId !== undefined;
     const isValidBrand =
       this.product.brandId !== null && this.product.brandId !== undefined;
     const isValidImage = this.product.image.trim() !== '';
-
-    console.log({
-      isValidName,
-      isValidPrice,
-      isValidCategory,
-      isValidBrand,
-      isValidImage,
-    });
 
     if (
       form.valid &&
@@ -122,7 +113,17 @@ export class ProductCreate implements OnInit {
     } else {
       const missing: string[] = [];
       if (!isValidName) missing.push('tên');
-      if (!isValidPrice) missing.push('giá');
+      if (!isValidPrice) {
+        if (
+          typeof this.product.price === 'number' &&
+          !isNaN(this.product.price) &&
+          this.product.price < 0
+        ) {
+          missing.push('giá (không được là số âm)');
+        } else {
+          missing.push('giá');
+        }
+      }
       if (!isValidCategory) missing.push('danh mục');
       if (!isValidBrand) missing.push('thương hiệu');
       if (!isValidImage) missing.push('ảnh');

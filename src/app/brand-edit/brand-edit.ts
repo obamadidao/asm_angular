@@ -2,7 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BrandService, Brand } from '../service';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
 @Component({
   selector: 'app-brand-edit',
@@ -15,6 +17,12 @@ export class BrandEdit implements OnInit {
   brand: Brand | null = null;
   brandName = '';
   errorMessage = '';
+
+  private notyf = new Notyf({
+    duration: 3000,
+    position: { x: 'right', y: 'top' },
+    dismissible: true,
+  });
 
   constructor(
     private brandService: BrandService,
@@ -30,8 +38,7 @@ export class BrandEdit implements OnInit {
           this.brand = data;
           this.brandName = data.name;
         },
-        error: (err) => {
-          console.error('Lỗi tải thương hiệu:', err);
+        error: () => {
           this.errorMessage = 'Không tìm thấy thương hiệu này.';
         },
       });
@@ -40,15 +47,15 @@ export class BrandEdit implements OnInit {
     }
   }
 
-  updateBrand(): void {
-    if (!this.brand || !this.brandName.trim()) {
-      this.errorMessage = 'Tên thương hiệu không được để trống.';
+  updateBrand(form: NgForm): void {
+    if (!this.brand || form.invalid || !this.brandName.trim()) {
+      this.notyf.error('Tên thương hiệu không được để trống.');
       return;
     }
 
     const trimmedName = this.brandName.trim();
 
-    // Kiểm tra trùng tên trước khi cập nhật
+    // Kiểm tra trùng tên
     this.brandService.getAllBrands().subscribe({
       next: (brands) => {
         const isDuplicate = brands.some(
@@ -58,7 +65,7 @@ export class BrandEdit implements OnInit {
         );
 
         if (isDuplicate) {
-          this.errorMessage = 'Tên thương hiệu đã tồn tại.';
+          this.notyf.error('Tên thương hiệu đã tồn tại.');
         } else {
           const updatedBrand: Brand = {
             id: this.brand!.id,
@@ -67,19 +74,17 @@ export class BrandEdit implements OnInit {
 
           this.brandService.updateBrand(updatedBrand.id, updatedBrand).subscribe({
             next: () => {
-              alert('Cập nhật thương hiệu thành công!');
+              this.notyf.success('Cập nhật thương hiệu thành công!');
               this.router.navigate(['/brands']);
             },
-            error: (err) => {
-              console.error('Lỗi cập nhật thương hiệu:', err);
-              this.errorMessage = 'Đã xảy ra lỗi khi cập nhật thương hiệu.';
+            error: () => {
+              this.notyf.error('Đã xảy ra lỗi khi cập nhật thương hiệu.');
             },
           });
         }
       },
-      error: (err) => {
-        console.error('Lỗi kiểm tra tên thương hiệu:', err);
-        this.errorMessage = 'Không thể kiểm tra tên thương hiệu.';
+      error: () => {
+        this.notyf.error('Không thể kiểm tra tên thương hiệu.');
       },
     });
   }

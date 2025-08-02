@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CategoryService, Category } from '../service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
 @Component({
   selector: 'app-category-list',
@@ -13,7 +16,16 @@ import { Router } from '@angular/router';
 export class CategoryList implements OnInit {
   categories: Category[] = [];
 
-  constructor(private categoryService: CategoryService, private router: Router) {}
+  private notyf = new Notyf({
+    duration: 3000,
+    position: { x: 'right', y: 'top' },
+    dismissible: true,
+  });
+
+  constructor(
+    private categoryService: CategoryService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadCategories();
@@ -22,28 +34,36 @@ export class CategoryList implements OnInit {
   loadCategories(): void {
     this.categoryService.getAllCategories().subscribe({
       next: (data) => (this.categories = data),
-      error: (err) => console.error('Lỗi tải danh mục:', err),
+      error: () => this.notyf.error('Không tải được danh sách danh mục.'),
     });
   }
 
-  // Sửa id sang string
-  onDelete(id: string): void {
-    if (confirm('Bạn có chắc muốn xóa danh mục này?')) {
-      this.categoryService.deleteCategory(id).subscribe({
-        next: () => {
-          alert('Xóa danh mục thành công');
-          this.loadCategories(); // reload danh sách
-        },
-        error: (err) => {
-          console.error('Lỗi khi xóa:', err);
-          alert('Xóa thất bại');
-        },
-      });
-    }
+  onDelete(category: Category): void {
+    Swal.fire({
+      title: 'Xác nhận',
+      html: `Bạn có chắc chắn muốn xóa danh mục <strong>${category.name}</strong> không?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy',
+      confirmButtonColor: '#d33',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.categoryService.deleteCategory(category.id.toString()).subscribe({
+          next: () => {
+            this.notyf.success(`Đã xóa danh mục "${category.name}" thành công!`);
+            this.loadCategories();
+          },
+          error: () => {
+            this.notyf.error(`Xóa danh mục "${category.name}" thất bại.`);
+          },
+        });
+      }
+    });
   }
 
-  // Sửa id sang string
   onEdit(id: string): void {
-   this.router.navigate(['/categories', id, 'edit']);
+    this.router.navigate(['/categories', id, 'edit']);
   }
 }

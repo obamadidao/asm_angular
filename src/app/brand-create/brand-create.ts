@@ -2,7 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { BrandService, Brand } from '../service';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
 @Component({
   selector: 'app-brand-create',
@@ -13,19 +15,27 @@ import { FormsModule } from '@angular/forms';
 })
 export class BrandCreate {
   brandName = '';
-  errorMessage = '';
 
-  constructor(private brandService: BrandService, private router: Router) {}
+  private notyf = new Notyf({
+    duration: 3000,
+    position: { x: 'right', y: 'top' },
+    dismissible: true,
+  });
 
-  createBrand(): void {
-    const trimmedName = this.brandName.trim();
+  constructor(
+    private brandService: BrandService,
+    private router: Router
+  ) {}
 
-    if (!trimmedName) {
-      this.errorMessage = 'Tên thương hiệu không được để trống.';
+  handleSubmit(form: NgForm): void {
+    if (form.invalid || !this.brandName.trim()) {
+      this.notyf.error('Tên thương hiệu là bắt buộc.');
       return;
     }
 
-    // Kiểm tra trùng tên trước khi tạo
+    const trimmedName = this.brandName.trim();
+
+    // Kiểm tra trùng tên
     this.brandService.getAllBrands().subscribe({
       next: (brands) => {
         const isDuplicate = brands.some(
@@ -33,24 +43,23 @@ export class BrandCreate {
         );
 
         if (isDuplicate) {
-          this.errorMessage = 'Tên thương hiệu đã tồn tại.';
-        } else {
-          const newBrand: Omit<Brand, 'id'> = { name: trimmedName };
-          this.brandService.createBrand(newBrand).subscribe({
-            next: () => {
-              alert('Tạo thương hiệu thành công!');
-              this.router.navigate(['/brands']);
-            },
-            error: (err: any) => {
-              console.error('Lỗi tạo thương hiệu:', err);
-              this.errorMessage = 'Đã xảy ra lỗi khi tạo thương hiệu.';
-            },
-          });
+          this.notyf.error('Tên thương hiệu đã tồn tại.');
+          return;
         }
+
+        const newBrand: Omit<Brand, 'id'> = { name: trimmedName };
+        this.brandService.createBrand(newBrand).subscribe({
+          next: () => {
+            this.notyf.success('Tạo thương hiệu thành công!');
+            this.router.navigate(['/brands']);
+          },
+          error: () => {
+            this.notyf.error('Đã xảy ra lỗi khi tạo thương hiệu.');
+          },
+        });
       },
-      error: (err) => {
-        console.error('Lỗi kiểm tra thương hiệu:', err);
-        this.errorMessage = 'Không thể kiểm tra tên thương hiệu.';
+      error: () => {
+        this.notyf.error('Không thể kiểm tra tên thương hiệu.');
       },
     });
   }

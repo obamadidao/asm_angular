@@ -8,11 +8,11 @@
   *ngIf="!isLoading && product"
   #form="ngForm"
   (ngSubmit)="handleSubmit(form)"
-  style="max-width: 600px; margin: auto;"
+  novalidate
 >
   <!-- Tên sản phẩm -->
   <div class="mb-3">
-    <label for="name" class="form-label">Product Name</label>
+    <label for="name" class="form-label">Product Name <span style="color:red">*</span></label>
     <input
       id="name"
       name="name"
@@ -20,12 +20,18 @@
       class="form-control"
       [(ngModel)]="product.name"
       required
+      #name="ngModel"
+      [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
+      placeholder="Enter product name"
     />
+    <div class="invalid-feedback" *ngIf="name.invalid && (name.dirty || name.touched)">
+      <div *ngIf="name.errors?.['required']">Tên sản phẩm không được để trống</div>
+    </div>
   </div>
 
   <!-- Giá -->
   <div class="mb-3">
-    <label for="price" class="form-label">Price</label>
+    <label for="price" class="form-label">Price <span style="color:red">*</span></label>
     <input
       id="price"
       name="price"
@@ -33,49 +39,74 @@
       class="form-control"
       [(ngModel)]="product.price"
       required
+      min="0"
+      step="0.01"
+      #price="ngModel"
+      [ngClass]="{
+        'is-invalid': (price.invalid && (price.dirty || price.touched)) || (product.price !== null && product.price < 0)
+      }"
+      placeholder="Enter price"
     />
+    <div class="invalid-feedback" *ngIf="(price.invalid && (price.dirty || price.touched)) || (product.price !== null && product.price < 0)">
+      <div *ngIf="price.errors?.['required']">Giá không được để trống</div>
+      <div *ngIf="price.errors?.['min'] || (product.price !== null && product.price < 0)">
+        Gía không hơp lệ
+      </div>
+    </div>
   </div>
 
   <!-- Danh mục -->
   <div class="mb-3">
-    <label for="categoryId" class="form-label">Category</label>
+    <label for="categoryId" class="form-label">Category <span style="color:red">*</span></label>
     <select
       id="categoryId"
       name="categoryId"
       class="form-select"
       [(ngModel)]="product.categoryId"
       required
+      #category="ngModel"
+      [ngClass]="{ 'is-invalid': category.invalid && (category.dirty || category.touched) }"
     >
       <option value="" disabled>-- Chọn danh mục --</option>
       <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
     </select>
+    <div class="invalid-feedback" *ngIf="category.invalid && (category.dirty || category.touched)">
+      Danh mục là bắt buộc
+    </div>
   </div>
 
   <!-- Thương hiệu -->
   <div class="mb-3">
-    <label for="brandId" class="form-label">Brand</label>
+    <label for="brandId" class="form-label">Brand <span style="color:red">*</span></label>
     <select
       id="brandId"
       name="brandId"
       class="form-select"
       [(ngModel)]="product.brandId"
       required
+      #brand="ngModel"
+      [ngClass]="{ 'is-invalid': brand.invalid && (brand.dirty || brand.touched) }"
     >
       <option value="" disabled>-- Chọn thương hiệu --</option>
       <option *ngFor="let b of brands" [value]="b.id">{{ b.name }}</option>
     </select>
+    <div class="invalid-feedback" *ngIf="brand.invalid && (brand.dirty || brand.touched)">
+      Thương hiệu là bắt buộc
+    </div>
   </div>
 
   <!-- Ảnh -->
   <div class="mb-3">
-    <label for="image" class="form-label">Product Image</label>
+    <label for="image" class="form-label">Product Image <span style="color:red">*</span></label>
     <input
       id="image"
       type="file"
       class="form-control"
       (change)="onImageSelected($event)"
     />
-
+    <div *ngIf="!product.image && form.submitted" class="invalid-feedback d-block">
+      Ảnh sản phẩm là bắt buộc
+    </div>
     <div *ngIf="product.image" class="mt-2">
       <p class="mb-1">Ảnh hiện tại:</p>
       <img
@@ -87,5 +118,16 @@
     </div>
   </div>
 
-  <button type="submit" class="btn btn-success">Cập nhật</button>
+ <button
+  type="submit"
+  class="btn btn-success"
+  [disabled]="
+    form.invalid ||
+    product.price === null ||
+    product.price < 0 ||
+    !product.image.trim()
+  "
+>
+  Cập nhật
+</button>
 </form>

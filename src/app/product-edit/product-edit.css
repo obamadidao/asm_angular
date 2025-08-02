@@ -3,6 +3,17 @@ form {
   margin: auto;
 }
 
+.is-invalid {
+  border-color: red !important;
+}
+
+.invalid-feedback {
+  color: red;
+  font-size: 0.875rem;
+}
+
 img.img-thumbnail {
   display: block;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
 }

@@ -103,18 +103,20 @@ export class ProductEdit implements OnInit {
       return;
     }
 
-    // Validation cơ bản
+    // validation
     const isValidName = this.product.name.trim() !== '';
     const priceNum = Number(this.product.price);
     const isValidPrice = !isNaN(priceNum) && priceNum >= 0;
-    const isValidCategory = this.product.categoryId !== '' && this.product.categoryId !== null;
-    const isValidBrand = this.product.brandId !== '' && this.product.brandId !== null;
+    const isValidCategory =
+      this.product.categoryId !== '' && this.product.categoryId !== null;
+    const isValidBrand =
+      this.product.brandId !== '' && this.product.brandId !== null;
     const isValidImage = this.product.image.trim() !== '';
 
     if (!(form.valid && isValidName && isValidPrice && isValidCategory && isValidBrand && isValidImage)) {
       const missing: string[] = [];
       if (!isValidName) missing.push('tên');
-      if (!isValidPrice) missing.push('giá hợp lệ');
+      if (!isValidPrice) missing.push('giá hợp lệ (không được âm)');
       if (!isValidCategory) missing.push('danh mục');
       if (!isValidBrand) missing.push('thương hiệu');
       if (!isValidImage) missing.push('ảnh');
@@ -126,7 +128,7 @@ export class ProductEdit implements OnInit {
       return;
     }
 
-    // chuẩn hóa
+    // chuẩn hóa giá
     this.product.price = priceNum;
 
     this.productService.updateProduct(this.product.id.toString(), this.product).subscribe({
