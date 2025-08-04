@@ -1,0 +1,26 @@
+<div class="auth-box">
+  <h2>Đăng ký</h2>
+
+  <div *ngIf="generalError" class="error">{{ generalError }}</div>
+
+  <input type="text" placeholder="Họ tên" [(ngModel)]="name" />
+  <div *ngIf="nameError" class="error">{{ nameError }}</div>
+
+  <input type="email" placeholder="Email" [(ngModel)]="email" />
+  <div *ngIf="emailError" class="error">{{ emailError }}</div>
+
+  <input type="password" placeholder="Mật khẩu" [(ngModel)]="password" />
+  <div *ngIf="passwordError" class="error">{{ passwordError }}</div>
+
+  <input type="password" placeholder="Xác nhận mật khẩu" [(ngModel)]="confirm" />
+  <div *ngIf="confirmError" class="error">{{ confirmError }}</div>
+
+  <button (click)="submit()" [disabled]="loading">
+    {{ loading ? 'Đang xử lý...' : 'Đăng ký' }}
+  </button>
+
+  <p>
+    Đã có tài khoản?
+    <a routerLink="/login">Đăng nhập</a>
+  </p>
+</div>

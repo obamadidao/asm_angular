@@ -1,3 +1,4 @@
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 
 import { HomepageComponent } from './homepage/homepage';
@@ -14,25 +15,34 @@ import { BrandList } from './brand-list/brand-list';
 import { BrandCreate } from './brand-create/brand-create';
 import { BrandEdit } from './brand-edit/brand-edit';
 
+import { LoginComponent } from './auth/login/login'; // điều chỉnh tên/đường dẫn nếu khác
+import { RegisterComponent } from './auth/register/register'; // hoặc signup
+import { AuthGuard } from './auth/auth.guard';
+
 export const routes: Routes = [
-  { path: '', component: HomepageComponent },
+  // public (login / register)
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+
+  // protected: phải login mới vào được
+  { path: '', component: HomepageComponent, canActivate: [AuthGuard] },
 
   // Products
-  { path: 'products', component: ProductList },
-  { path: 'products/create', component: ProductCreate },
-  { path: 'products/:id/detail', component: ProductDetail },
-  { path: 'products/:id/edit', component: ProductEdit },
+  { path: 'products', component: ProductList, canActivate: [AuthGuard] },
+  { path: 'products/create', component: ProductCreate, canActivate: [AuthGuard] },
+  { path: 'products/:id/detail', component: ProductDetail, canActivate: [AuthGuard] },
+  { path: 'products/:id/edit', component: ProductEdit, canActivate: [AuthGuard] },
 
   // Categories
-  { path: 'categories', component: CategoryList },
-  { path: 'categories/create', component: CategoryCreate },
-  { path: 'categories/:id/edit', component: CategoryEdit },
+  { path: 'categories', component: CategoryList, canActivate: [AuthGuard] },
+  { path: 'categories/create', component: CategoryCreate, canActivate: [AuthGuard] },
+  { path: 'categories/:id/edit', component: CategoryEdit, canActivate: [AuthGuard] },
 
   // Brands
-  { path: 'brands', component: BrandList },
-  { path: 'brands/create', component: BrandCreate },
-  { path: 'brands/:id/edit', component: BrandEdit },
+  { path: 'brands', component: BrandList, canActivate: [AuthGuard] },
+  { path: 'brands/create', component: BrandCreate, canActivate: [AuthGuard] },
+  { path: 'brands/:id/edit', component: BrandEdit, canActivate: [AuthGuard] },
 
-  // Fallback route (optional)
-  { path: '**', redirectTo: '' }
+  // fallback: nếu không login sẽ bị redirect về login vì guard trên '' route
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

@@ -1,9 +1,17 @@
-<div class="d-flex">
+<!-- chỉ show nếu đã login -->
+<div *ngIf="auth.isAuthenticated()" class="d-flex">
   <!-- Sidebar cố định -->
   <div class="bg-dark text-white p-3 sidebar" style="width: 250px; min-height: 100vh">
-    <h4>Menu</h4>
+    <div class="mb-3">
+      <div><strong>Menu</strong></div>
+      <div class="mt-2">
+        <div>Xin chào, {{ auth.getUser()?.name }}</div>
+        <button class="btn btn-sm btn-outline-light mt-1" (click)="auth.logout()">Logout</button>
+      </div>
+    </div>
+
     <ul class="nav flex-column">
-      <li class="nav-item">
+      <li class="nav-item mb-2">
         <a class="nav-link text-white" routerLink="/">Homepage</a>
       </li>
 
@@ -46,26 +54,26 @@
           </li>
         </ul>
       </li>
-      <!-- Brands Dropdown -->
-<li class="nav-item">
-  <div
-    class="nav-link text-white d-flex justify-content-between align-items-center"
-    style="cursor: pointer"
-    (click)="toggleBrands()"
-  >
-    Brands
-    <span [innerHTML]="showBrands ? '&#9650;' : '&#9660;'"></span>
-  </div>
-  <ul class="nav flex-column ms-3" *ngIf="showBrands">
-    <li class="nav-item">
-      <a class="nav-link text-white" routerLink="/brands">Brand List</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-white" routerLink="/brands/create">Create Brand</a>
-    </li>
-  </ul>
-</li>
 
+      <!-- Brands Dropdown -->
+      <li class="nav-item">
+        <div
+          class="nav-link text-white d-flex justify-content-between align-items-center"
+          style="cursor: pointer"
+          (click)="toggleBrands()"
+        >
+          Brands
+          <span [innerHTML]="showBrands ? '&#9650;' : '&#9660;'"></span>
+        </div>
+        <ul class="nav flex-column ms-3" *ngIf="showBrands">
+          <li class="nav-item">
+            <a class="nav-link text-white" routerLink="/brands">Brand List</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" routerLink="/brands/create">Create Brand</a>
+          </li>
+        </ul>
+      </li>
     </ul>
   </div>
 </div>
