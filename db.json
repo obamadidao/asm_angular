@@ -39,7 +39,10 @@
   ],
   "users": [
     {
-
+      "id": "u_1754385458671",
+      "name": "Phúc",
+      "email": "laohetpin@gmail.com",
+      "password": "12345678"
     }
   ]
 }
