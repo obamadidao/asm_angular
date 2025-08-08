@@ -1,0 +1,17 @@
+<div class="product-list">
+  <h1>Danh sách sản phẩm</h1>
+
+  <div *ngIf="products?.length > 0; else noProduct">
+    <div class="product-card" *ngFor="let product of products">
+      <a [routerLink]="['/product-detail', product.id]">
+        <img [src]="product.image" alt="{{ product.name }}" width="200" />
+        <h3>{{ product.name }}</h3>
+        <p><strong>Giá:</strong> {{ product.price | currency:'VND':'symbol':'1.0-0' }}</p>
+      </a>
+    </div>
+  </div>
+
+  <ng-template #noProduct>  
+    <p>Không có sản phẩm nào.</p>
+  </ng-template>
+</div>

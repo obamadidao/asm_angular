@@ -34,7 +34,7 @@ export class RegisterComponent {
   ) {}
 
   submit() {
-    // Reset all errors
+
     this.nameError = '';
     this.emailError = '';
     this.passwordError = '';
@@ -44,7 +44,7 @@ export class RegisterComponent {
     const nameRegex = /^[a-zA-ZÀ-ỹ\s]+$/u;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    // Validate fields
+
     if (!this.name.trim()) {
       this.nameError = 'Họ tên không được để trống';
     } else if (!nameRegex.test(this.name)) {
@@ -69,7 +69,7 @@ export class RegisterComponent {
       this.confirmError = 'Mật khẩu không khớp';
     }
 
-    // Nếu có lỗi, dừng lại
+
     if (
       this.nameError ||
       this.emailError ||
@@ -84,7 +84,7 @@ export class RegisterComponent {
       .register(this.name, this.email, this.password)
       .pipe(
         catchError((err) => {
-          // Xử lý lỗi trả về từ AuthService (ví dụ: email đã tồn tại)
+
           if (err.message?.includes('Email')) {
             this.emailError = err.message;
           } else {

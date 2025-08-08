@@ -4,9 +4,9 @@ import { CategoryService } from '../service';
 import { BrandService } from '../service';
 
 @Component({
-  selector: 'app-homepage',
-  templateUrl: './homepage.html',
-  styleUrls: ['./homepage.css']
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.html',
+  styleUrls: ['./dashboard.css']
 })
 export class HomepageComponent implements OnInit {
   productCount = 0;

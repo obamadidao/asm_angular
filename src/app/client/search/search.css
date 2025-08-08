@@ -1,0 +1,10 @@
+.search-result {
+  padding: 20px;
+}
+.search-result ul {
+  list-style: none;
+  padding: 0;
+}
+.search-result li {
+  padding: 5px 0;
+}

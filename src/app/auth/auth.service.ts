@@ -1,4 +1,4 @@
-// src/app/auth/auth.service.ts
+
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +9,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  password?: string; // chỉ lưu trong db, không đưa vào session
+  password?: string; 
 }
 
 @Injectable({ providedIn: 'root' })
@@ -30,10 +30,10 @@ export class AuthService {
   }
 
   private saveSession(user: User): void {
-    const token = 'fake-jwt-' + Date.now(); // Có thể thay bằng real JWT sau
+    const token = 'fake-jwt-' + Date.now(); 
     localStorage.setItem(this.TOKEN_KEY, token);
 
-    // Không lưu password vào session
+
     const { password, ...safeUser } = user;
     localStorage.setItem(this.USER_KEY, JSON.stringify(safeUser));
   }
@@ -44,9 +44,7 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  /**
-   * Đăng ký tài khoản
-   */
+
   register(name: string, email: string, password: string): Observable<void> {
     const encodedEmail = encodeURIComponent(email);
 
@@ -63,7 +61,7 @@ export class AuthService {
             id: 'u_' + Date.now(),
             name,
             email,
-            password, // Plain text cho demo, không dùng thực tế
+            password, 
           };
 
           return this.http
@@ -73,9 +71,7 @@ export class AuthService {
       );
   }
 
-  /**
-   * Đăng nhập
-   */
+
   login(email: string, password: string): Observable<void> {
     const encodedEmail = encodeURIComponent(email);
 

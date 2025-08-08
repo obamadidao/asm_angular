@@ -1,7 +1,7 @@
-// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 
-import { HomepageComponent } from './homepage/homepage';
+// Admin components
+import { HomepageComponent } from './dashboard/dashboard';
 import { ProductList } from './product-list/product-list';
 import { ProductDetail } from './product-detail/product-detail';
 import { ProductCreate } from './product-create/product-create';
@@ -15,34 +15,42 @@ import { BrandList } from './brand-list/brand-list';
 import { BrandCreate } from './brand-create/brand-create';
 import { BrandEdit } from './brand-edit/brand-edit';
 
-import { LoginComponent } from './auth/login/login'; // điều chỉnh tên/đường dẫn nếu khác
-import { RegisterComponent } from './auth/register/register'; // hoặc signup
+// Auth
+import { LoginComponent } from './auth/login/login';
+import { RegisterComponent } from './auth/register/register';
 import { AuthGuard } from './auth/auth.guard';
 
+// ✅ Client components - đúng tên file bạn có
+import { ClientHomeComponent } from './client/client-home/client-home';
+import { ProductDetailComponent } from './client/product-detail/product-detail';
+import { SearchComponent } from './client/search/search';
+
 export const routes: Routes = [
-  // public (login / register)
+  // --- Public pages ---
+  { path: '', component: ClientHomeComponent },
+  { path: 'product/:id', component: ProductDetailComponent },
+  { path: 'search', component: SearchComponent },
+  { path: 'product-detail/:id', component: ProductDetailComponent },
+
+  // --- Auth pages ---
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
-  // protected: phải login mới vào được
-  { path: '', component: HomepageComponent, canActivate: [AuthGuard] },
+  // --- Admin pages (protected by AuthGuard) ---
+  { path: 'admin', component: HomepageComponent, canActivate: [AuthGuard] },
+  { path: 'admin/products', component: ProductList, canActivate: [AuthGuard] },
+  { path: 'admin/products/create', component: ProductCreate, canActivate: [AuthGuard] },
+  { path: 'admin/products/:id/detail', component: ProductDetail, canActivate: [AuthGuard] },
+  { path: 'admin/products/:id/edit', component: ProductEdit, canActivate: [AuthGuard] },
 
-  // Products
-  { path: 'products', component: ProductList, canActivate: [AuthGuard] },
-  { path: 'products/create', component: ProductCreate, canActivate: [AuthGuard] },
-  { path: 'products/:id/detail', component: ProductDetail, canActivate: [AuthGuard] },
-  { path: 'products/:id/edit', component: ProductEdit, canActivate: [AuthGuard] },
+  { path: 'admin/categories', component: CategoryList, canActivate: [AuthGuard] },
+  { path: 'admin/categories/create', component: CategoryCreate, canActivate: [AuthGuard] },
+  { path: 'admin/categories/:id/edit', component: CategoryEdit, canActivate: [AuthGuard] },
 
-  // Categories
-  { path: 'categories', component: CategoryList, canActivate: [AuthGuard] },
-  { path: 'categories/create', component: CategoryCreate, canActivate: [AuthGuard] },
-  { path: 'categories/:id/edit', component: CategoryEdit, canActivate: [AuthGuard] },
+  { path: 'admin/brands', component: BrandList, canActivate: [AuthGuard] },
+  { path: 'admin/brands/create', component: BrandCreate, canActivate: [AuthGuard] },
+  { path: 'admin/brands/:id/edit', component: BrandEdit, canActivate: [AuthGuard] },
 
-  // Brands
-  { path: 'brands', component: BrandList, canActivate: [AuthGuard] },
-  { path: 'brands/create', component: BrandCreate, canActivate: [AuthGuard] },
-  { path: 'brands/:id/edit', component: BrandEdit, canActivate: [AuthGuard] },
-
-  // fallback: nếu không login sẽ bị redirect về login vì guard trên '' route
+  // fallback
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

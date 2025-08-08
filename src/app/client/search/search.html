@@ -1,0 +1,16 @@
+<input [(ngModel)]="keyword" placeholder="Tìm sản phẩm..." />
+<button (click)="onSearch()">Tìm</button>
+
+<div *ngIf="results.length > 0; else noResults">
+  <h3>Kết quả tìm kiếm:</h3>
+  <div *ngFor="let product of results" class="search-result-item">
+    <a [routerLink]="['/product-detail', product.id]">
+      <h4>{{ product.name }}</h4>
+    </a>
+    <p><strong>Giá:</strong> {{ product.price | currency:'VND':'symbol':'1.0-0' }}</p>
+  </div>
+</div>
+
+<ng-template #noResults>
+  <p *ngIf="keyword.trim()">Không tìm thấy sản phẩm phù hợp.</p>
+</ng-template>

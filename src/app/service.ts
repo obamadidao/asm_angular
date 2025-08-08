@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 // ---------- Models ----------
 export interface Product {
-  id: string;          // chuyển sang string
+  id: string;
   name: string;
   price: number;
   image: string;
@@ -13,12 +13,12 @@ export interface Product {
 }
 
 export interface Category {
-  id: string;          // chuyển sang string
+  id: string;
   name: string;
 }
 
 export interface Brand {
-  id: string;          // chuyển sang string
+  id: string;
   name: string;
 }
 
@@ -35,7 +35,7 @@ export class ProductService {
     return this.http.get<Product[]>(this.apiUrl);
   }
 
-  getProductById(id: string): Observable<Product> {   // id là string
+  getProductById(id: string): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 
@@ -43,11 +43,11 @@ export class ProductService {
     return this.http.post<Product>(this.apiUrl, product);
   }
 
-  updateProduct(id: string, product: Product): Observable<Product> {  // id là string
+  updateProduct(id: string, product: Product): Observable<Product> {
     return this.http.put<Product>(`${this.apiUrl}/${id}`, product);
   }
 
-  deleteProduct(id: string): Observable<void> {    // id là string
+  deleteProduct(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
@@ -65,7 +65,7 @@ export class CategoryService {
     return this.http.get<Category[]>(this.apiUrl);
   }
 
-  getCategoryById(id: string): Observable<Category> {   // id là string
+  getCategoryById(id: string): Observable<Category> {
     return this.http.get<Category>(`${this.apiUrl}/${id}`);
   }
 
@@ -73,11 +73,11 @@ export class CategoryService {
     return this.http.post<Category>(this.apiUrl, category);
   }
 
-  updateCategory(id: string, category: Category): Observable<Category> {  // id là string
+  updateCategory(id: string, category: Category): Observable<Category> {
     return this.http.put<Category>(`${this.apiUrl}/${id}`, category);
   }
 
-  deleteCategory(id: string): Observable<void> {  // id là string
+  deleteCategory(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
@@ -95,7 +95,7 @@ export class BrandService {
     return this.http.get<Brand[]>(this.apiUrl);
   }
 
-  getBrandById(id: string): Observable<Brand> {  // id là string
+  getBrandById(id: string): Observable<Brand> {
     return this.http.get<Brand>(`${this.apiUrl}/${id}`);
   }
 
@@ -103,11 +103,11 @@ export class BrandService {
     return this.http.post<Brand>(this.apiUrl, brand);
   }
 
-  updateBrand(id: string, brand: Brand): Observable<Brand> {  // id là string
+  updateBrand(id: string, brand: Brand): Observable<Brand> {
     return this.http.put<Brand>(`${this.apiUrl}/${id}`, brand);
   }
 
-  deleteBrand(id: string): Observable<void> {  // id là string
+  deleteBrand(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
