@@ -1,10 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService, Product } from '../../service'; // Đảm bảo đúng đường dẫn
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { ProductService, Product } from '../../service';
 
 @Component({
   selector: 'app-product-list',
+  standalone: true,
   templateUrl: './product-list.html',
-  styleUrls: ['./product-list.css']
+  styleUrls: ['./product-list.css'],
+  imports: [
+    CommonModule,
+    RouterModule // ⚠️ Đảm bảo có RouterModule để routerLink hoạt động
+  ]
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];

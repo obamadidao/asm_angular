@@ -15,27 +15,21 @@ import { BrandList } from './brand-list/brand-list';
 import { BrandCreate } from './brand-create/brand-create';
 import { BrandEdit } from './brand-edit/brand-edit';
 
-// Auth
 import { LoginComponent } from './auth/login/login';
 import { RegisterComponent } from './auth/register/register';
 import { AuthGuard } from './auth/auth.guard';
 
-// Client components
 import { ClientHomeComponent } from './client/client-home/client-home';
-import { ProductDetailComponent } from './client/product-detail/product-detail';
 import { SearchComponent } from './client/search/search';
 
 export const routes: Routes = [
-  // --- Public (Client) pages ---
   { path: '', component: ClientHomeComponent },
-  { path: 'product/:id', component: ProductDetailComponent },
+
   { path: 'search', component: SearchComponent },
 
-  // --- Auth pages ---
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
-  // --- Admin pages ---
   { path: 'admin', component: AdminDashboardComponent, canActivate: [AuthGuard] },
   { path: 'admin/products', component: ProductList, canActivate: [AuthGuard] },
   { path: 'admin/products/create', component: ProductCreate, canActivate: [AuthGuard] },
@@ -50,6 +44,5 @@ export const routes: Routes = [
   { path: 'admin/brands/create', component: BrandCreate, canActivate: [AuthGuard] },
   { path: 'admin/brands/:id/edit', component: BrandEdit, canActivate: [AuthGuard] },
 
-  // fallback
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

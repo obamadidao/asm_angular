@@ -7,10 +7,8 @@
 <h2>Sản phẩm</h2>
 <div class="product-grid">
   <div *ngFor="let product of products" class="product-card">
-    <a [routerLink]="['/product-detail', product.id]">
-      <img [src]="product.image" alt="{{ product.name }}" />
-      <h3>{{ product.name }}</h3>
-      <p>{{ product.price | currency:'VND' }}</p>
-    </a>
+    <img [src]="product.image" alt="{{ product.name }}" />
+    <h3>{{ product.name }}</h3>
+    <p>{{ product.price | currency:'VND' }}</p>
   </div>
 </div>
