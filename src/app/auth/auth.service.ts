@@ -38,11 +38,11 @@ export class AuthService {
     localStorage.setItem(this.USER_KEY, JSON.stringify(safeUser));
   }
 
-  logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.USER_KEY);
-    this.router.navigate(['/login']);
-  }
+logout(): void {
+  localStorage.removeItem(this.TOKEN_KEY);
+  localStorage.removeItem(this.USER_KEY);
+  this.router.navigate(['/client-home']); 
+}
 
 
   register(name: string, email: string, password: string): Observable<void> {

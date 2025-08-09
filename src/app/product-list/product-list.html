@@ -41,7 +41,7 @@
         <td>{{ getCategoryName(product.categoryId) }}</td>
         <td>{{ getBrandName(product.brandId) }}</td>
         <td>
-          <button class="btn btn-warning btn-sm me-1" (click)="editProduct(product.id)">Sửa</button>
+          <a [routerLink]="['/admin/products', product.id, 'edit']" class="btn btn-warning btn-sm me-1">Sửa</a>
           <button class="btn btn-danger btn-sm" (click)="deleteProduct(product)">Xóa</button>
         </td>
       </tr>

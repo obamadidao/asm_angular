@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 // Admin components
-import { HomepageComponent } from './dashboard/dashboard';
+import { AdminDashboardComponent } from './dashboard/dashboard';
 import { ProductList } from './product-list/product-list';
 import { ProductDetail } from './product-detail/product-detail';
 import { ProductCreate } from './product-create/product-create';
@@ -20,24 +20,23 @@ import { LoginComponent } from './auth/login/login';
 import { RegisterComponent } from './auth/register/register';
 import { AuthGuard } from './auth/auth.guard';
 
-// ✅ Client components - đúng tên file bạn có
+// Client components
 import { ClientHomeComponent } from './client/client-home/client-home';
 import { ProductDetailComponent } from './client/product-detail/product-detail';
 import { SearchComponent } from './client/search/search';
 
 export const routes: Routes = [
-  // --- Public pages ---
+  // --- Public (Client) pages ---
   { path: '', component: ClientHomeComponent },
   { path: 'product/:id', component: ProductDetailComponent },
   { path: 'search', component: SearchComponent },
-  { path: 'product-detail/:id', component: ProductDetailComponent },
 
   // --- Auth pages ---
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
-  // --- Admin pages (protected by AuthGuard) ---
-  { path: 'admin', component: HomepageComponent, canActivate: [AuthGuard] },
+  // --- Admin pages ---
+  { path: 'admin', component: AdminDashboardComponent, canActivate: [AuthGuard] },
   { path: 'admin/products', component: ProductList, canActivate: [AuthGuard] },
   { path: 'admin/products/create', component: ProductCreate, canActivate: [AuthGuard] },
   { path: 'admin/products/:id/detail', component: ProductDetail, canActivate: [AuthGuard] },

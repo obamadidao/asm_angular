@@ -5,14 +5,16 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-category-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule], 
   templateUrl: './category-list.html',
   styleUrls: ['./category-list.css'],
 })
+
 export class CategoryList implements OnInit {
   categories: Category[] = [];
 
@@ -63,7 +65,9 @@ export class CategoryList implements OnInit {
     });
   }
 
-  onEdit(id: string): void {
-    this.router.navigate(['/categories', id, 'edit']);
+  onEdit(event: MouseEvent, id: string): void {
+    event.stopPropagation(); // chặn click lan ra ngoài
+    event.preventDefault(); // chặn load lại trang
+    this.router.navigate(['/admin/categories', id, 'edit']); // đảm bảo đi đúng route admin
   }
 }

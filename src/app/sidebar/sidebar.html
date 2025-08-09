@@ -1,4 +1,4 @@
-<!-- chỉ show nếu đã login -->
+<!-- Chỉ hiển thị nếu đã đăng nhập -->
 <div *ngIf="auth.isAuthenticated()" class="d-flex">
   <!-- Sidebar cố định -->
   <div class="bg-dark text-white p-3 sidebar" style="width: 250px; min-height: 100vh">
@@ -6,71 +6,68 @@
       <div><strong>Menu</strong></div>
       <div class="mt-2">
         <div>Xin chào, {{ auth.getUser()?.name }}</div>
-        <button class="btn btn-sm btn-outline-light mt-1" (click)="auth.logout()">Logout</button>
+        <button class="btn btn-sm btn-outline-light mt-1" (click)="auth.logout()">Đăng xuất</button>
       </div>
     </div>
 
     <ul class="nav flex-column">
       <li class="nav-item mb-2">
-        <a class="nav-link text-white" routerLink="/">Homepage</a>
+        <a class="nav-link text-white" routerLink="/admin/homepage">Trang chủ quản trị</a>
+      </li>
+      <li class="nav-item mb-2">
+        <a routerLink="/admin" class="nav-link text-white">Bảng điều khiển</a>
       </li>
 
-      <!-- Products Dropdown -->
+      <!-- Sản phẩm -->
       <li class="nav-item">
-        <div
-          class="nav-link text-white d-flex justify-content-between align-items-center"
-          style="cursor: pointer"
-          (click)="toggleProducts()"
-        >
-          Products
+        <div class="nav-link text-white d-flex justify-content-between align-items-center"
+             style="cursor: pointer"
+             (click)="toggleProducts()">
+          Sản phẩm
           <span [innerHTML]="showProducts ? '&#9650;' : '&#9660;'"></span>
         </div>
         <ul class="nav flex-column ms-3" *ngIf="showProducts">
           <li class="nav-item">
-            <a class="nav-link text-white" routerLink="/products">Product List</a>
+            <a class="nav-link text-white" routerLink="/admin/products">Danh sách sản phẩm</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" routerLink="/products/create">Create Product</a>
+            <a class="nav-link text-white" routerLink="/admin/products/create">Thêm sản phẩm</a>
           </li>
         </ul>
       </li>
 
-      <!-- Categories Dropdown -->
+      <!-- Danh mục -->
       <li class="nav-item">
-        <div
-          class="nav-link text-white d-flex justify-content-between align-items-center"
-          style="cursor: pointer"
-          (click)="toggleCategories()"
-        >
-          Categories
+        <div class="nav-link text-white d-flex justify-content-between align-items-center"
+             style="cursor: pointer"
+             (click)="toggleCategories()">
+          Danh mục
           <span [innerHTML]="showCategories ? '&#9650;' : '&#9660;'"></span>
         </div>
         <ul class="nav flex-column ms-3" *ngIf="showCategories">
           <li class="nav-item">
-            <a class="nav-link text-white" routerLink="/categories">Category List</a>
+            <a class="nav-link text-white" routerLink="/admin/categories">Danh sách danh mục</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" routerLink="/categories/create">Create Category</a>
+            <a class="nav-link text-white" routerLink="/admin/categories/create">Thêm danh mục</a>
           </li>
         </ul>
       </li>
 
-      <!-- Brands Dropdown -->
+      <!-- Thương hiệu -->
       <li class="nav-item">
-        <div
-          class="nav-link text-white d-flex justify-content-between align-items-center"
-          style="cursor: pointer"
-          (click)="toggleBrands()"
-        >
-          Brands
+        <div class="nav-link text-white d-flex justify-content-between align-items-center"
+             style="cursor: pointer"
+             (click)="toggleBrands()">
+          Thương hiệu
           <span [innerHTML]="showBrands ? '&#9650;' : '&#9660;'"></span>
         </div>
         <ul class="nav flex-column ms-3" *ngIf="showBrands">
           <li class="nav-item">
-            <a class="nav-link text-white" routerLink="/brands">Brand List</a>
+            <a class="nav-link text-white" routerLink="/admin/brands">Danh sách thương hiệu</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" routerLink="/brands/create">Create Brand</a>
+            <a class="nav-link text-white" routerLink="/admin/brands/create">Thêm thương hiệu</a>
           </li>
         </ul>
       </li>

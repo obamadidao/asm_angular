@@ -1,27 +1,28 @@
 <div class="container mt-4">
-  <h2>Category List</h2>
+  <h2 class="mb-3">Category List</h2>
 
-  <table class="table table-bordered table-striped">
-    <thead class="table-light">
+  <table class="table table-sm table-hover align-middle border">
+    <thead class="table-light text-center">
       <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Actions</th>
+        <th style="width: 15%">ID</th>
+        <th style="width: 55%">Name</th>
+        <th style="width: 30%">Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let category of categories">
-        <td>{{ category.id }}</td>
+        <td class="text-center">{{ category.id }}</td>
         <td>{{ category.name }}</td>
-        <td>
-          <button
-            class="btn btn-warning btn-sm me-2"
-            (click)="onEdit(category.id)"
+        <td class="text-center">
+          <a
+            class="btn btn-warning btn-sm me-1"
+            [routerLink]="['/admin/categories', category.id, 'edit']"
           >
             Sửa
-          </button>
+          </a>
           <button
             class="btn btn-danger btn-sm"
+            type="button"
             (click)="onDelete(category)"
           >
             Xóa

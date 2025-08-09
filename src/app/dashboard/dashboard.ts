@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from '../service'; 
-import { CategoryService } from '../service';
-import { BrandService } from '../service';
+import { ProductService, Product } from '../service';
+import { CategoryService, Category } from '../service';
+import { BrandService, Brand } from '../service';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-admin-dashboard',
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
-export class HomepageComponent implements OnInit {
+export class AdminDashboardComponent implements OnInit {
   productCount = 0;
   categoryCount = 0;
   brandCount = 0;
@@ -20,15 +20,15 @@ export class HomepageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.productService.getAllProducts().subscribe((products) => {
+    this.productService.getAllProducts().subscribe((products: Product[]) => {
       this.productCount = products.length;
     });
 
-    this.categoryService.getAllCategories().subscribe((categories) => {
+    this.categoryService.getAllCategories().subscribe((categories: Category[]) => {
       this.categoryCount = categories.length;
     });
 
-    this.brandService.getAllBrands().subscribe((brands) => {
+    this.brandService.getAllBrands().subscribe((brands: Brand[]) => {
       this.brandCount = brands.length;
     });
   }

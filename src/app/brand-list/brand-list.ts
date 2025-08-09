@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { BrandService, Brand } from '../service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
@@ -9,7 +9,7 @@ import 'notyf/notyf.min.css';
 @Component({
   selector: 'app-brand-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './brand-list.html',
   styleUrls: ['./brand-list.css'],
 })
@@ -63,7 +63,9 @@ export class BrandList implements OnInit {
     });
   }
 
-  onEdit(id: string): void {
-    this.router.navigate(['/brands', id, 'edit']);
+  onEdit(event: MouseEvent, id: string): void {
+    event.stopPropagation();
+    event.preventDefault();
+    this.router.navigate(['/admin/brands', id, 'edit']);
   }
 }
